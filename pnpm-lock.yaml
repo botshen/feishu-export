@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      html2pdf.js:
+        specifier: ^0.10.3
+        version: 0.10.3
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
@@ -384,6 +387,12 @@ packages:
   '@types/node@22.15.17':
     resolution: {integrity: sha1-NVzOyV9wW2ZOQzK7ZKfwfbMLcFU=, tarball: http://r.npm.sankuai.com/@types/node/download/@types/node-22.15.17.tgz}
 
+  '@types/raf@3.4.3':
+    resolution: {integrity: sha1-hfHR0XVpsouNtF4W6ZZAelawqwQ=, tarball: http://r.npm.sankuai.com/@types/raf/download/@types/raf-3.4.3.tgz}
+
+  '@types/trusted-types@2.0.7':
+    resolution: {integrity: sha1-usywepcLkXB986PoumiWxX6tLRE=, tarball: http://r.npm.sankuai.com/@types/trusted-types/download/@types/trusted-types-2.0.7.tgz}
+
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha1-6bKAi08QlQSgPNqVglmHb2EBeZk=, tarball: http://r.npm.sankuai.com/@types/yauzl/download/@types/yauzl-2.10.3.tgz}
 
@@ -515,6 +524,11 @@ packages:
   async@3.2.6:
     resolution: {integrity: sha1-Gwco4Ukp1RuFtEm38G4nwRReOM4=, tarball: http://r.npm.sankuai.com/async/download/async-3.2.6.tgz}
 
+  atob@2.1.2:
+    resolution: {integrity: sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=, tarball: http://r.npm.sankuai.com/atob/download/atob-2.1.2.tgz}
+    engines: {node: '>= 4.5.0'}
+    hasBin: true
+
   atomic-sleep@1.0.0:
     resolution: {integrity: sha1-64W3emAfyTLP5DLFrNNkqeLJB1s=, tarball: http://r.npm.sankuai.com/atomic-sleep/download/atomic-sleep-1.0.0.tgz}
     engines: {node: '>=8.0.0'}
@@ -524,6 +538,10 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha1-6D46fj8wCzTLnYf2FfoMvzV2kO4=, tarball: http://r.npm.sankuai.com/balanced-match/download/balanced-match-1.0.2.tgz}
+
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha1-HDdYmnxLB0bjS9H+uVHaLfAcG9w=, tarball: http://r.npm.sankuai.com/base64-arraybuffer/download/base64-arraybuffer-1.0.2.tgz}
+    engines: {node: '>= 0.6.0'}
 
   base64-js@1.5.1:
     resolution: {integrity: sha1-GxtEAWClv3rUC2UPCVljSBkDkwo=, tarball: http://r.npm.sankuai.com/base64-js/download/base64-js-1.5.1.tgz}
@@ -559,6 +577,11 @@ packages:
     resolution: {integrity: sha1-SQMy9AkZRSJy1VqEgK3AxEE1h4k=, tarball: http://r.npm.sankuai.com/braces/download/braces-3.0.3.tgz}
     engines: {node: '>=8'}
 
+  btoa@1.2.1:
+    resolution: {integrity: sha1-AamQn4ssk/a/aAuiYTHrMPf6PXM=, tarball: http://r.npm.sankuai.com/btoa/download/btoa-1.2.1.tgz}
+    engines: {node: '>= 0.4.0'}
+    hasBin: true
+
   buffer-crc32@0.2.13:
     resolution: {integrity: sha1-DTM+PwDqxQqhRUq9MO+MKl2ackI=, tarball: http://r.npm.sankuai.com/buffer-crc32/download/buffer-crc32-0.2.13.tgz}
 
@@ -591,6 +614,10 @@ packages:
   camelcase@8.0.0:
     resolution: {integrity: sha1-wNNtQYdT+2rZxeBDdXl0XBwUpTQ=, tarball: http://r.npm.sankuai.com/camelcase/download/camelcase-8.0.0.tgz}
     engines: {node: '>=16'}
+
+  canvg@3.0.11:
+    resolution: {integrity: sha1-S0KQpsf6NocfrCsU5DLv8zszzys=, tarball: http://r.npm.sankuai.com/canvg/download/canvg-3.0.11.tgz}
+    engines: {node: '>=10.0.0'}
 
   chalk@4.1.2:
     resolution: {integrity: sha1-qsTit3NKdAhnrrFr8CqtVWoeegE=, tarball: http://r.npm.sankuai.com/chalk/download/chalk-4.1.2.tgz}
@@ -694,12 +721,18 @@ packages:
     resolution: {integrity: sha1-WvEQFFOXu2ev2rdwE/3DTK5ZDqc=, tarball: http://r.npm.sankuai.com/consola/download/consola-3.4.2.tgz}
     engines: {node: ^14.18.0 || >=16.10.0}
 
+  core-js@3.42.0:
+    resolution: {integrity: sha1-7b6R94rIz7bfjZl+dNNopoCC/jc=, tarball: http://r.npm.sankuai.com/core-js/download/core-js-3.42.0.tgz}
+
   core-util-is@1.0.3:
     resolution: {integrity: sha1-pgQtNjTCsn6TKPg3uWX6yDgI24U=, tarball: http://r.npm.sankuai.com/core-util-is/download/core-util-is-1.0.3.tgz}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha1-ilj+ePANzXDDcEUXWd+/rwPo7p8=, tarball: http://r.npm.sankuai.com/cross-spawn/download/cross-spawn-7.0.6.tgz}
     engines: {node: '>= 8'}
+
+  css-line-break@2.1.0:
+    resolution: {integrity: sha1-v+9mDfpvU5fqVBFrs8tIc+28T6A=, tarball: http://r.npm.sankuai.com/css-line-break/download/css-line-break-2.1.0.tgz}
 
   css-select@5.1.0:
     resolution: {integrity: sha1-uOvWVUw2N8zHZoiAStP2pv2uqKY=, tarball: http://r.npm.sankuai.com/css-select/download/css-select-5.1.0.tgz}
@@ -797,6 +830,9 @@ packages:
     resolution: {integrity: sha1-zDhff3UfHR/GUMITdIBCVFOMfTE=, tarball: http://r.npm.sankuai.com/domhandler/download/domhandler-5.0.3.tgz}
     engines: {node: '>= 4'}
 
+  dompurify@3.2.5:
+    resolution: {integrity: sha1-EbEIZWpftysk2RbfF6FCFmPXEpw=, tarball: http://r.npm.sankuai.com/dompurify/download/dompurify-3.2.5.tgz}
+
   domutils@3.2.2:
     resolution: {integrity: sha1-7b/itmiwwdl8JLrw8QYrEyIhvHg=, tarball: http://r.npm.sankuai.com/domutils/download/domutils-3.2.2.tgz}
 
@@ -841,6 +877,9 @@ packages:
 
   es6-error@4.1.1:
     resolution: {integrity: sha1-njr0B0Wd7tR+mpH5uIWoTrBcVh0=, tarball: http://r.npm.sankuai.com/es6-error/download/es6-error-4.1.1.tgz}
+
+  es6-promise@4.2.8:
+    resolution: {integrity: sha1-TrIVlMlyvEBVPSduUQU5FD21Pgo=, tarball: http://r.npm.sankuai.com/es6-promise/download/es6-promise-4.2.8.tgz}
 
   esbuild@0.25.4:
     resolution: {integrity: sha1-u5oWM01O8sM8cwGpJLi4YzUaCFQ=, tarball: http://r.npm.sankuai.com/esbuild/download/esbuild-0.25.4.tgz}
@@ -909,6 +948,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  fflate@0.8.2:
+    resolution: {integrity: sha1-/IYx9TR4Eq1gKLvkojCLJ5KqHeo=, tarball: http://r.npm.sankuai.com/fflate/download/fflate-0.8.2.tgz}
 
   filesize@10.1.6:
     resolution: {integrity: sha1-MRlNqCWsWGicC845SPM86Dqr02E=, tarball: http://r.npm.sankuai.com/filesize/download/filesize-10.1.6.tgz}
@@ -1002,6 +1044,13 @@ packages:
 
   html-escaper@3.0.3:
     resolution: {integrity: sha1-TTNmdGUr6x3Lwp72trp/a+b9/tY=, tarball: http://r.npm.sankuai.com/html-escaper/download/html-escaper-3.0.3.tgz}
+
+  html2canvas@1.4.1:
+    resolution: {integrity: sha1-fO8YiDEbUBHVB3lKBmBBsUZppUM=, tarball: http://r.npm.sankuai.com/html2canvas/download/html2canvas-1.4.1.tgz}
+    engines: {node: '>=8.0.0'}
+
+  html2pdf.js@0.10.3:
+    resolution: {integrity: sha1-a3yj6Vr9/K8rVggh+ln70G/dkjY=, tarball: http://r.npm.sankuai.com/html2pdf.js/download/html2pdf.js-0.10.3.tgz}
 
   htmlparser2@10.0.0:
     resolution: {integrity: sha1-d60kkDe2a/jMmcbihu9zuDrrYh0=, tarball: http://r.npm.sankuai.com/htmlparser2/download/htmlparser2-10.0.0.tgz}
@@ -1177,6 +1226,9 @@ packages:
 
   jsonfile@6.1.0:
     resolution: {integrity: sha1-vFWyY0eTxnnsZAMJTrE2mKbsCq4=, tarball: http://r.npm.sankuai.com/jsonfile/download/jsonfile-6.1.0.tgz}
+
+  jspdf@3.0.1:
+    resolution: {integrity: sha1-2B4ZZPNU9gQSUW6yRJ6izM1NKjs=, tarball: http://r.npm.sankuai.com/jspdf/download/jspdf-3.0.1.tgz}
 
   jszip@3.10.1:
     resolution: {integrity: sha1-NK7nDrGOofrsL1iSCKFX0f6wkcI=, tarball: http://r.npm.sankuai.com/jszip/download/jszip-3.10.1.tgz}
@@ -1441,6 +1493,9 @@ packages:
   perfect-debounce@1.0.0:
     resolution: {integrity: sha1-nC6LwwsWnMmEpYt9WygEmDlZHSo=, tarball: http://r.npm.sankuai.com/perfect-debounce/download/perfect-debounce-1.0.0.tgz}
 
+  performance-now@2.1.0:
+    resolution: {integrity: sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=, tarball: http://r.npm.sankuai.com/performance-now/download/performance-now-2.1.0.tgz}
+
   picocolors@1.1.1:
     resolution: {integrity: sha1-PTIa8+q5ObCDyPkpodEs2oHCa2s=, tarball: http://r.npm.sankuai.com/picocolors/download/picocolors-1.1.1.tgz}
 
@@ -1510,6 +1565,9 @@ packages:
   quick-format-unescaped@4.0.4:
     resolution: {integrity: sha1-k+9t2NNFPLx5cN1hT61MWVTWtac=, tarball: http://r.npm.sankuai.com/quick-format-unescaped/download/quick-format-unescaped-4.0.4.tgz}
 
+  raf@3.4.1:
+    resolution: {integrity: sha1-B0LpmkplUvRF1z4+4DKK8P8e3jk=, tarball: http://r.npm.sankuai.com/raf/download/raf-3.4.1.tgz}
+
   rc9@2.1.2:
     resolution: {integrity: sha1-YoL/Y4pQyqCpGjHXavSgucvRCA0=, tarball: http://r.npm.sankuai.com/rc9/download/rc9-2.1.2.tgz}
 
@@ -1531,6 +1589,9 @@ packages:
   real-require@0.2.0:
     resolution: {integrity: sha1-IJYy3qGBC+KuBjpqwIT+5+M/ung=, tarball: http://r.npm.sankuai.com/real-require/download/real-require-0.2.0.tgz}
     engines: {node: '>= 12.13.0'}
+
+  regenerator-runtime@0.13.11:
+    resolution: {integrity: sha1-9tyj587sIFkNB62nhWNqkM3KF/k=, tarball: http://r.npm.sankuai.com/regenerator-runtime/download/regenerator-runtime-0.13.11.tgz}
 
   regenerator-runtime@0.14.1:
     resolution: {integrity: sha1-NWreECY/aF3aElEAzYYsHbiVMn8=, tarball: http://r.npm.sankuai.com/regenerator-runtime/download/regenerator-runtime-0.14.1.tgz}
@@ -1561,6 +1622,10 @@ packages:
 
   rfdc@1.4.1:
     resolution: {integrity: sha1-d492xPtzHZNBTo+SX77PZMzn9so=, tarball: http://r.npm.sankuai.com/rfdc/download/rfdc-1.4.1.tgz}
+
+  rgbcolor@1.0.1:
+    resolution: {integrity: sha1-1lBezbMEplldom+ktDMHMGd1lF0=, tarball: http://r.npm.sankuai.com/rgbcolor/download/rgbcolor-1.0.1.tgz}
+    engines: {node: '>= 0.8.15'}
 
   rollup@4.40.2:
     resolution: {integrity: sha1-d46It6GXVCaCs+MYWB92l/VfBhk=, tarball: http://r.npm.sankuai.com/rollup/download/rollup-4.40.2.tgz}
@@ -1666,6 +1731,10 @@ packages:
   split@1.0.1:
     resolution: {integrity: sha1-YFvZvjA6pZ+zX5Ip++oN3snqB9k=, tarball: http://r.npm.sankuai.com/split/download/split-1.0.1.tgz}
 
+  stackblur-canvas@2.7.0:
+    resolution: {integrity: sha1-r5MSd9C1CW31Xh+RxTAEPgZpibY=, tarball: http://r.npm.sankuai.com/stackblur-canvas/download/stackblur-canvas-2.7.0.tgz}
+    engines: {node: '>=0.1.14'}
+
   stdin-discarder@0.1.0:
     resolution: {integrity: sha1-IrPkADk6jijr9T+ZWPOIBiLv3iE=, tarball: http://r.npm.sankuai.com/stdin-discarder/download/stdin-discarder-0.1.0.tgz}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -1725,6 +1794,13 @@ packages:
   supports-color@7.2.0:
     resolution: {integrity: sha1-G33NyzK4E4gBs+R4umpRyqiWSNo=, tarball: http://r.npm.sankuai.com/supports-color/download/supports-color-7.2.0.tgz}
     engines: {node: '>=8'}
+
+  svg-pathdata@6.0.3:
+    resolution: {integrity: sha1-gLDgKDtlLMuvtprU+Pc+jT+/LKw=, tarball: http://r.npm.sankuai.com/svg-pathdata/download/svg-pathdata-6.0.3.tgz}
+    engines: {node: '>=12.0.0'}
+
+  text-segmentation@1.0.3:
+    resolution: {integrity: sha1-UqOIFZ7//nRrJKY7oxG2rJ8teUM=, tarball: http://r.npm.sankuai.com/text-segmentation/download/text-segmentation-1.0.3.tgz}
 
   thenify-all@1.6.0:
     resolution: {integrity: sha1-GhkY1ALY/D+Y+/I02wvMjMEOlyY=, tarball: http://r.npm.sankuai.com/thenify-all/download/thenify-all-1.6.0.tgz}
@@ -1812,6 +1888,9 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=, tarball: http://r.npm.sankuai.com/util-deprecate/download/util-deprecate-1.0.2.tgz}
+
+  utrie@1.0.2:
+    resolution: {integrity: sha1-1C/kTem8ARnCXef1ZKbtGyyHpkU=, tarball: http://r.npm.sankuai.com/utrie/download/utrie-1.0.2.tgz}
 
   uuid@8.3.2:
     resolution: {integrity: sha1-gNW1ztJxu5r2xEXyGhoExgbO++I=, tarball: http://r.npm.sankuai.com/uuid/download/uuid-8.3.2.tgz}
@@ -2215,6 +2294,12 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/raf@3.4.3':
+    optional: true
+
+  '@types/trusted-types@2.0.7':
+    optional: true
+
   '@types/yauzl@2.10.3':
     dependencies:
       '@types/node': 22.15.17
@@ -2373,6 +2458,8 @@ snapshots:
 
   async@3.2.6: {}
 
+  atob@2.1.2: {}
+
   atomic-sleep@1.0.0: {}
 
   atomically@2.0.3:
@@ -2381,6 +2468,8 @@ snapshots:
       when-exit: 2.1.4
 
   balanced-match@1.0.2: {}
+
+  base64-arraybuffer@1.0.2: {}
 
   base64-js@1.5.1: {}
 
@@ -2424,6 +2513,8 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
+  btoa@1.2.1: {}
+
   buffer-crc32@0.2.13: {}
 
   buffer-from@1.1.2: {}
@@ -2461,6 +2552,18 @@ snapshots:
   cac@6.7.14: {}
 
   camelcase@8.0.0: {}
+
+  canvg@3.0.11:
+    dependencies:
+      '@babel/runtime': 7.27.0
+      '@types/raf': 3.4.3
+      core-js: 3.42.0
+      raf: 3.4.1
+      regenerator-runtime: 0.13.11
+      rgbcolor: 1.0.1
+      stackblur-canvas: 2.7.0
+      svg-pathdata: 6.0.3
+    optional: true
 
   chalk@4.1.2:
     dependencies:
@@ -2569,6 +2672,9 @@ snapshots:
 
   consola@3.4.2: {}
 
+  core-js@3.42.0:
+    optional: true
+
   core-util-is@1.0.3: {}
 
   cross-spawn@7.0.6:
@@ -2576,6 +2682,10 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  css-line-break@2.1.0:
+    dependencies:
+      utrie: 1.0.2
 
   css-select@5.1.0:
     dependencies:
@@ -2654,6 +2764,11 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
 
+  dompurify@3.2.5:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+    optional: true
+
   domutils@3.2.2:
     dependencies:
       dom-serializer: 2.0.0
@@ -2691,6 +2806,8 @@ snapshots:
   es-module-lexer@1.7.0: {}
 
   es6-error@4.1.1: {}
+
+  es6-promise@4.2.8: {}
 
   esbuild@0.25.4:
     optionalDependencies:
@@ -2794,6 +2911,8 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  fflate@0.8.2: {}
+
   filesize@10.1.6: {}
 
   fill-range@7.1.1:
@@ -2876,6 +2995,17 @@ snapshots:
   hookable@5.5.3: {}
 
   html-escaper@3.0.3: {}
+
+  html2canvas@1.4.1:
+    dependencies:
+      css-line-break: 2.1.0
+      text-segmentation: 1.0.3
+
+  html2pdf.js@0.10.3:
+    dependencies:
+      es6-promise: 4.2.8
+      html2canvas: 1.4.1
+      jspdf: 3.0.1
 
   htmlparser2@10.0.0:
     dependencies:
@@ -2994,6 +3124,18 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  jspdf@3.0.1:
+    dependencies:
+      '@babel/runtime': 7.27.0
+      atob: 2.1.2
+      btoa: 1.2.1
+      fflate: 0.8.2
+    optionalDependencies:
+      canvg: 3.0.11
+      core-js: 3.42.0
+      dompurify: 3.2.5
+      html2canvas: 1.4.1
 
   jszip@3.10.1:
     dependencies:
@@ -3293,6 +3435,9 @@ snapshots:
 
   perfect-debounce@1.0.0: {}
 
+  performance-now@2.1.0:
+    optional: true
+
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -3387,6 +3532,11 @@ snapshots:
 
   quick-format-unescaped@4.0.4: {}
 
+  raf@3.4.1:
+    dependencies:
+      performance-now: 2.1.0
+    optional: true
+
   rc9@2.1.2:
     dependencies:
       defu: 6.1.4
@@ -3419,6 +3569,9 @@ snapshots:
 
   real-require@0.2.0: {}
 
+  regenerator-runtime@0.13.11:
+    optional: true
+
   regenerator-runtime@0.14.1: {}
 
   registry-auth-token@5.1.0:
@@ -3444,6 +3597,9 @@ snapshots:
   reusify@1.1.0: {}
 
   rfdc@1.4.1: {}
+
+  rgbcolor@1.0.1:
+    optional: true
 
   rollup@4.40.2:
     dependencies:
@@ -3552,6 +3708,9 @@ snapshots:
     dependencies:
       through: 2.3.8
 
+  stackblur-canvas@2.7.0:
+    optional: true
+
   stdin-discarder@0.1.0:
     dependencies:
       bl: 5.1.0
@@ -3605,6 +3764,13 @@ snapshots:
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
+
+  svg-pathdata@6.0.3:
+    optional: true
+
+  text-segmentation@1.0.3:
+    dependencies:
+      utrie: 1.0.2
 
   thenify-all@1.6.0:
     dependencies:
@@ -3697,6 +3863,10 @@ snapshots:
       xdg-basedir: 5.1.0
 
   util-deprecate@1.0.2: {}
+
+  utrie@1.0.2:
+    dependencies:
+      base64-arraybuffer: 1.0.2
 
   uuid@8.3.2: {}
 
