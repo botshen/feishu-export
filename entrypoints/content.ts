@@ -1,44 +1,76 @@
 // @ts-ignore
 import html2pdf from "html2pdf.js";
+import { createApp } from 'vue';
+import App from "./popup/App.vue";
 
 export default defineContentScript({
-  matches: ["<all_urls>"],
-  async main() {
+  matches: ["*://*.feishu.cn/*"],
+  cssInjectionMode: 'ui',
+  async main(ctx) {
+    const ui = await createShadowRootUi(ctx, {
+      name: 'example-ui',
+      position: 'inline',
+      anchor: 'body',
+      onMount: (container) => {
+        // Define how your UI will be mounted inside the container
+        const app = createApp(App);
+        app.mount(container);
+        return app;
+      },
+      onRemove: (app) => {
+        // Unmount the app when the UI is removed
+        app?.unmount();
+      },
+    });
+
+    // 4. Mount the UI
+    ui.mount();
     console.log("Injecting script...");
     await injectScript("/injected.js", {
       keepInDom: true,
     });
     console.log("Done!");
 
-    // 获取目标元素
-    var element = document.querySelector('.root-block');
-
-    if (element) {
-      try {
-        // 在生成 PDF 前转换图片为 base64
-        await convertImagesToBase64(element);
-
-        // 生成 PDF
-        html2pdf(element, {
-          margin: [10, 10, 10, 10],
-          filename: 'feishu-export.pdf',
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: true
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        });
-      } catch (error) {
-        console.error('PDF 生成过程中出错:', error);
-      }
-    } else {
-      console.error('找不到目标元素 .root-block');
-    }
+    // 添加事件监听器
+    document.addEventListener('exportFeishuPDF', async () => {
+      console.log('收到导出PDF事件');
+      await exportToPDF();
+    });
   },
 });
+
+/**
+ * 导出飞书文档为PDF
+ */
+async function exportToPDF(): Promise<void> {
+  // 获取目标元素
+  var element = document.querySelector('.root-block');
+
+  if (element) {
+    try {
+      // 在生成 PDF 前转换图片为 base64
+      await convertImagesToBase64(element);
+
+      // 生成 PDF
+      html2pdf(element, {
+        margin: [10, 10, 10, 10],
+        filename: 'feishu-export.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: true
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      });
+    } catch (error) {
+      console.error('PDF 生成过程中出错:', error);
+    }
+  } else {
+    console.error('找不到目标元素 .root-block');
+  }
+}
 
 /**
  * 将元素内的所有图片转换为 base64 格式

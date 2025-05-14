@@ -1,30 +1,25 @@
 <script lang="ts" setup>
-import HelloWorld from '@/components/HelloWorld.vue';
+const handleClick = () => {
+  console.log('Button clicked');
+  // 发送自定义事件给content script
+  document.dispatchEvent(new CustomEvent('exportFeishuPDF'));
+};
 </script>
 
 <template>
-  <div>
-    <a href="https://wxt.dev" target="_blank">
-      <img src="/wxt.svg" class="logo" alt="WXT logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="@/assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="WXT + Vue" />
+  <button @click="handleClick">导出PDF</button>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #54bc4ae0);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+button {
+  position: fixed;
+  top: 200px;
+  right: 0px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: red;
+  z-index: 9999;
+  cursor: pointer;
 }
 </style>

@@ -10,7 +10,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: ["injected.js"],
-        matches: ["<all_urls>"],
+        matches: ["*://*.feishu.cn/*"],
       },
     ],
   },
