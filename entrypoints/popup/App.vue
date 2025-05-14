@@ -4,16 +4,34 @@ const handleClick = () => {
   // 发送自定义事件给content script
   document.dispatchEvent(new CustomEvent('exportFeishuPDF'));
 };
+
+const handlePrintTOC = () => {
+  console.log('Button clicked');
+  // 发送自定义事件给content script
+  document.dispatchEvent(new CustomEvent('printTOC'));
+};
 </script>
 
 <template>
-  <button @click="handleClick">导出PDF</button>
+  <button class="export-pdf-button" @click="handleClick">导出PDF1</button>
+  <button class="print-toc-button" @click="handlePrintTOC">打印TOC2</button>
 </template>
 
 <style scoped>
-button {
+.export-pdf-button {
   position: fixed;
   top: 200px;
+  right: 0px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  color: red;
+  z-index: 9999;
+  cursor: pointer;
+}
+.print-toc-button {
+  position: fixed;
+  top: 400px;
   right: 0px;
   width: 60px;
   height: 60px;

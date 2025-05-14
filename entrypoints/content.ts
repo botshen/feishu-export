@@ -36,6 +36,49 @@ export default defineContentScript({
       console.log('收到导出PDF事件');
       await exportToPDF();
     });
+
+    // 添加打印 TOC 的事件监听器
+    document.addEventListener('printTOC', () => {
+      console.log('收到打印TOC事件');
+      const tocElement = document.getElementById('TOC-ROOT');
+      if (tocElement) {
+        console.log('找到 TOC 元素');
+        // 获取所有的 div 元素
+        const divs = tocElement.querySelectorAll('div[role="item"]');
+        // 过滤出不包含 button 的 div
+        const filteredDivs = Array.from(divs).filter(div => {
+          return !div.querySelector('button');
+        });
+
+        // 存储所有有文本的按钮
+        const buttonsWithText: { button: Element; text: string }[] = [];
+
+        // 遍历所有符合条件的 div，找出所有的 button 元素
+        filteredDivs.forEach((div, index) => {
+          const buttons = div.querySelectorAll('[role="button"]');
+          if (buttons.length > 0) {
+            buttons.forEach((button, buttonIndex) => {
+              const buttonText = (button as HTMLElement).textContent?.trim();
+              if (buttonText) {
+                buttonsWithText.push({ button, text: buttonText });
+                console.log(`找到按钮：${buttonText}`);
+              }
+            });
+          }
+        });
+
+        // 如果有按钮，触发最后一个按钮的点击事件
+        if (buttonsWithText.length > 0) {
+          const lastButton = buttonsWithText[buttonsWithText.length - 1];
+          console.log(`触发最后一个按钮的点击事件，按钮文本：${lastButton.text}`);
+          (lastButton.button as HTMLElement).click();
+        } else {
+          console.log('没有找到任何有文本的按钮');
+        }
+      } else {
+        console.log('未找到 TOC 元素');
+      }
+    });
   },
 });
 
