@@ -27,11 +27,11 @@ async function setZoom(zoomFactor: number): Promise<void> {
 }
 
 /**
- * 导出飞书文档为PDF
+ * 导出单个页面为PDF
  */
-async function exportToPDF(): Promise<void> {
+async function exportSinglePageToPDF(): Promise<void> {
   try {
-    // 设置页面缩放为 0.1 (10%)
+    // 设置页面缩放为 0.01 (1%)
     await setZoom(0.01);
 
     // 等待 2 秒，确保缩放效果完全应用
@@ -81,34 +81,82 @@ async function exportToPDF(): Promise<void> {
   }
 }
 
+/**
+ * 按照目录顺序批量导出PDF
+ */
+async function exportToPDF(): Promise<void> {
+  console.log('开始按目录顺序批量导出PDF');
 
+  // 查找目录元素
+  const tocElement = document.getElementById('TOC-ROOT');
+  if (!tocElement) {
+    console.log('未找到TOC元素，将只导出当前页面');
+    await exportSinglePageToPDF();
+    return;
+  }
 
-
-
-
-
-
-// 控制页面缩放
-async function setPageZoom(zoomFactor: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const currentTab = tabs[0];
-      if (currentTab?.id) {
-        browser.tabs.setZoom(currentTab.id, zoomFactor, () => {
-          if (browser.runtime.lastError) {
-            console.error('设置缩放失败:', browser.runtime.lastError);
-            reject(browser.runtime.lastError);
-          } else {
-            console.log(`页面缩放已设置为 ${zoomFactor * 100}%`);
-            resolve();
-          }
-        });
-      } else {
-        reject(new Error('未找到当前标签页'));
-      }
-    });
+  console.log('找到 TOC 元素');
+  // 获取所有的 div 元素
+  const divs = tocElement.querySelectorAll('div[role="item"]');
+  // 过滤出不包含 button 的 div
+  const filteredDivs = Array.from(divs).filter(div => {
+    return !div.querySelector('button');
   });
+
+  // 存储所有有文本的按钮
+  const buttonsWithText: { button: Element; text: string }[] = [];
+
+  // 遍历所有符合条件的 div，找出所有的 button 元素
+  filteredDivs.forEach((div, index) => {
+    const buttons = div.querySelectorAll('[role="button"]');
+    if (buttons.length > 0) {
+      buttons.forEach((button, buttonIndex) => {
+        const buttonText = (button as HTMLElement).textContent?.trim();
+        if (buttonText) {
+          buttonsWithText.push({ button, text: buttonText });
+          console.log(`找到目录按钮：${buttonText}`);
+        }
+      });
+    }
+  });
+
+  // 如果找到按钮，按顺序点击并导出PDF
+  if (buttonsWithText.length > 0) {
+    console.log(`找到 ${buttonsWithText.length} 个目录项，开始批量导出...`);
+
+    // 按顺序处理每个按钮，从第一个开始
+    for (let i = 0; i < buttonsWithText.length; i++) {
+      const button = buttonsWithText[i];
+      console.log(`处理第 ${i + 1}/${buttonsWithText.length} 个目录项，文本：${button.text}`);
+
+      // 点击按钮，切换到对应内容
+      (button.button as HTMLElement).click();
+
+      // 等待内容加载
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // 导出当前页面为PDF
+      await exportSinglePageToPDF();
+
+      // 等待PDF导出完成
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+
+    console.log('批量导出完成');
+  } else {
+    console.log('没有找到任何目录项，将只导出当前页面');
+    await exportSinglePageToPDF();
+  }
 }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -141,49 +189,6 @@ export default defineContentScript({
     document.addEventListener('exportFeishuPDF', async () => {
       console.log('收到导出PDF事件');
       await exportToPDF();
-    });
-
-    // 添加打印 TOC 的事件监听器
-    document.addEventListener('printTOC', () => {
-      console.log('收到打印TOC事件');
-      const tocElement = document.getElementById('TOC-ROOT');
-      if (tocElement) {
-        console.log('找到 TOC 元素');
-        // 获取所有的 div 元素
-        const divs = tocElement.querySelectorAll('div[role="item"]');
-        // 过滤出不包含 button 的 div
-        const filteredDivs = Array.from(divs).filter(div => {
-          return !div.querySelector('button');
-        });
-
-        // 存储所有有文本的按钮
-        const buttonsWithText: { button: Element; text: string }[] = [];
-
-        // 遍历所有符合条件的 div，找出所有的 button 元素
-        filteredDivs.forEach((div, index) => {
-          const buttons = div.querySelectorAll('[role="button"]');
-          if (buttons.length > 0) {
-            buttons.forEach((button, buttonIndex) => {
-              const buttonText = (button as HTMLElement).textContent?.trim();
-              if (buttonText) {
-                buttonsWithText.push({ button, text: buttonText });
-                console.log(`找到按钮：${buttonText}`);
-              }
-            });
-          }
-        });
-
-        // 如果有按钮，触发最后一个按钮的点击事件
-        if (buttonsWithText.length > 0) {
-          const lastButton = buttonsWithText[buttonsWithText.length - 1];
-          console.log(`触发最后一个按钮的点击事件，按钮文本：${lastButton.text}`);
-          (lastButton.button as HTMLElement).click();
-        } else {
-          console.log('没有找到任何有文本的按钮');
-        }
-      } else {
-        console.log('未找到 TOC 元素');
-      }
     });
   },
 });

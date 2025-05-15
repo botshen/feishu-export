@@ -14,8 +14,7 @@ const handlePrintTOC = () => {
 
 <template>
   <button class="export-pdf-button" @click="handleClick">导出PDF</button>
-  <button class="print-toc-button" @click="handlePrintTOC">打印TOC</button>
-</template>
+ </template>
 
 <style scoped>
 .export-pdf-button {
