@@ -7,6 +7,7 @@ export default defineConfig({
     disabled: true,
   },
   manifest: {
+    permissions: ['tabs'],
     web_accessible_resources: [
       {
         resources: ["injected.js"],

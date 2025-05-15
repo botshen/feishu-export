@@ -3,52 +3,26 @@ import html2pdf from "html2pdf.js";
 import { createApp } from 'vue';
 import App from "./popup/App.vue";
 
-// 添加延时函数
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// 获取所有文档链接
-async function getAllDocLinks(): Promise<Array<{ token: string; title: string }>> {
-  const tocElement = document.getElementById('TOC-ROOT');
-  if (!tocElement) {
-    console.log('未找到目录元素');
-    return [];
-  }
-
-  const docs: Array<{ token: string; title: string }> = [];
-  const nodes = tocElement.querySelectorAll('.workspace-tree-view-node');
-  nodes.forEach(node => {
-    const uid = node.getAttribute('data-node-uid');
-    if (uid) {
-      const wikiToken = uid.split('wikiToken=')[1];
-      const titleElement = node.querySelector('.workspace-tree-view-node-content');
-      const title = titleElement ? titleElement.textContent?.trim() || wikiToken : wikiToken;
-      if (wikiToken) {
-        docs.push({ token: wikiToken, title });
-      }
-    }
-  });
-
-  return docs;
-}
 
 /**
  * 导出飞书文档为PDF
  */
-async function exportToPDF(filename: string = 'feishu-export.pdf'): Promise<void> {
-  // 获取目标元素
-  var element = document.querySelector('.root-block');
+async function exportToPDF(): Promise<void> {
+  try {
+    // 获取目标元素
+    var element = document.querySelector('.root-block');
+    console.log('找到目标元素:', element);
 
-  if (element) {
-    try {
-      // 在生成 PDF 前转换图片为 base64
-      await convertImagesToBase64(element);
+    if (element) {
+      // 获取文档标题作为文件名
+      const titleElement = document.querySelector('.doc-title');
+      const title = titleElement?.textContent?.trim() || 'feishu-doc';
+      const safeTitle = title.replace(/[\\/:*?"<>|]/g, '_');
 
       // 生成 PDF
       await html2pdf(element, {
         margin: [10, 10, 10, 10],
-        filename: filename,
+        filename: `${safeTitle}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: {
           scale: 2,
@@ -59,50 +33,45 @@ async function exportToPDF(filename: string = 'feishu-export.pdf'): Promise<void
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       });
 
-      console.log(`PDF 已生成: ${filename}`);
-    } catch (error) {
-      console.error('PDF 生成过程中出错:', error);
-    }
-  } else {
-    console.error('找不到目标元素 .root-block');
-  }
-}
-
-// 导出单个文档
-async function exportSingleDoc(doc: { token: string; title: string }): Promise<void> {
-  try {
-    // 找到对应的按钮并点击
-    const button = document.querySelector(`[data-node-uid*="wikiToken=${doc.token}"]`);
-    if (button) {
-      (button as HTMLElement).click();
-      console.log(`正在处理文档: ${doc.title}`);
-
-      // 等待文档加载
-      await sleep(3000);
-
-      // 导出 PDF
-      await exportToPDF(`${doc.title}.pdf`);
-
-      // 等待 PDF 生成完成
-      await sleep(1000);
+      console.log(`PDF 已生成: ${safeTitle}.pdf`);
+    } else {
+      console.error('找不到目标元素 .root-block');
     }
   } catch (error) {
-    console.error(`处理文档 ${doc.title} 时出错:`, error);
+    console.error('PDF 生成过程中出错:', error);
   }
 }
 
-// 导出所有文档
-async function exportAllDocs() {
-  const docs = await getAllDocLinks();
-  console.log(`找到 ${docs.length} 个文档`);
 
-  for (let i = 0; i < docs.length; i++) {
-    console.log(`正在导出第 ${i + 1}/${docs.length} 个文档: ${docs[i].title}`);
-    await exportSingleDoc(docs[i]);
-  }
 
-  console.log('所有文档导出完成');
+
+
+
+
+
+// 控制页面缩放
+async function setPageZoom(zoomFactor: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const currentTab = tabs[0];
+      if (currentTab?.id) {
+        browser.tabs.setZoom(currentTab.id, zoomFactor, () => {
+          if (browser.runtime.lastError) {
+            console.error('设置缩放失败:', browser.runtime.lastError);
+            reject(browser.runtime.lastError);
+          } else {
+            console.log(`页面缩放已设置为 ${zoomFactor * 100}%`);
+            resolve();
+          }
+        });
+      } else {
+        reject(new Error('未找到当前标签页'));
+      }
+    });
+  });
 }
+
+
 
 export default defineContentScript({
   matches: ["*://*.feishu.cn/*"],
@@ -129,10 +98,10 @@ export default defineContentScript({
     });
     console.log("Done!");
 
-    // 添加事件监听器
+    // 添加导出PDF事件监听器
     document.addEventListener('exportFeishuPDF', async () => {
       console.log('收到导出PDF事件');
-      await exportAllDocs();
+      await exportToPDF();
     });
 
     // 添加打印 TOC 的事件监听器
@@ -179,58 +148,3 @@ export default defineContentScript({
     });
   },
 });
-
-/**
- * 将元素内的所有图片转换为 base64 格式
- * @param element 包含图片的 DOM 元素
- */
-async function convertImagesToBase64(element: Element): Promise<void> {
-  // 获取元素内所有图片
-  const images = element.querySelectorAll('img');
-
-  // 创建一个 Promise 数组，用于等待所有图片转换完成
-  const promises = Array.from(images).map(async (img) => {
-    // 如果已经是 data URL，跳过
-    if (img.src.startsWith('data:')) return;
-
-    try {
-      // 创建图片加载的 Promise
-      const imgLoaded = new Promise<void>((resolve, reject) => {
-        if (img.complete) {
-          resolve();
-        } else {
-          img.onload = () => resolve();
-          img.onerror = () => reject(new Error(`图片加载失败: ${img.src}`));
-        }
-      });
-
-      // 等待图片加载完成
-      await imgLoaded;
-
-      // 创建 canvas 元素
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth || img.width;
-      canvas.height = img.naturalHeight || img.height;
-
-      // 在 canvas 上绘制图片
-      const ctx = canvas.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(img, 0, 0);
-
-        // 将 canvas 转换为 data URL
-        try {
-          const dataURL = canvas.toDataURL('image/png');
-          img.src = dataURL;
-        } catch (e) {
-          console.warn('图片转换为 base64 失败，可能是跨域问题:', e);
-        }
-      }
-    } catch (error) {
-      console.warn('处理图片时出错:', error);
-    }
-  });
-
-  // 等待所有图片处理完成
-  await Promise.all(promises);
-  console.log('所有图片已转换为 base64 格式');
-}
