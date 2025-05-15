@@ -5,11 +5,7 @@ const handleClick = () => {
   document.dispatchEvent(new CustomEvent('exportFeishuPDF'));
 };
 
-const handlePrintTOC = () => {
-  console.log('Button clicked');
-  // 发送自定义事件给content script
-  document.dispatchEvent(new CustomEvent('printTOC'));
-};
+ 
 </script>
 
 <template>

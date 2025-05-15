@@ -8,11 +8,5 @@ export default defineConfig({
   },
   manifest: {
     permissions: ['tabs'],
-    web_accessible_resources: [
-      {
-        resources: ["injected.js"],
-        matches: ["*://*.feishu.cn/*"],
-      },
-    ],
   },
 });

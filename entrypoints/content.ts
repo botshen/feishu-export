@@ -1,7 +1,7 @@
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { createApp } from 'vue';
-import App from "./popup/App.vue";
+import App from "../components/App.vue";
 
 /**
  * 设置页面缩放
@@ -346,11 +346,7 @@ export default defineContentScript({
     });
 
     ui.mount();
-    console.log("Injecting script...");
-    await injectScript("/injected.js", {
-      keepInDom: true,
-    });
-    console.log("Done!");
+
 
     // 添加导出PDF事件监听器
     document.addEventListener('exportFeishuPDF', async () => {
