@@ -5,10 +5,38 @@ import App from "./popup/App.vue";
 
 
 /**
+ * 设置页面缩放
+ */
+async function setZoom(zoomFactor: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    browser.runtime.sendMessage({ action: 'setZoom', zoomFactor })
+      .then(response => {
+        if (response && response.success) {
+          console.log(`页面缩放已设置为 ${zoomFactor * 100}%`);
+          resolve();
+        } else {
+          console.error('设置缩放失败:', response?.error || '未知错误');
+          reject(new Error(response?.error || '设置缩放失败'));
+        }
+      })
+      .catch(error => {
+        console.error('发送缩放请求失败:', error);
+        reject(error);
+      });
+  });
+}
+
+/**
  * 导出飞书文档为PDF
  */
 async function exportToPDF(): Promise<void> {
   try {
+    // 设置页面缩放为 0.1 (10%)
+    await setZoom(0.01);
+
+    // 等待 2 秒，确保缩放效果完全应用
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
     // 获取目标元素
     var element = document.querySelector('.root-block');
     console.log('找到目标元素:', element);
@@ -34,11 +62,22 @@ async function exportToPDF(): Promise<void> {
       });
 
       console.log(`PDF 已生成: ${safeTitle}.pdf`);
+
+      // PDF生成完成后恢复原始缩放
+      await setZoom(1.0);
     } else {
       console.error('找不到目标元素 .root-block');
+      // 如果找不到元素也要恢复缩放
+      await setZoom(1.0);
     }
   } catch (error) {
     console.error('PDF 生成过程中出错:', error);
+    // 出错时也要尝试恢复缩放
+    try {
+      await setZoom(1.0);
+    } catch (e) {
+      console.error('恢复缩放失败:', e);
+    }
   }
 }
 
