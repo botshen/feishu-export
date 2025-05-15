@@ -3,6 +3,107 @@ import html2pdf from "html2pdf.js";
 import { createApp } from 'vue';
 import App from "./popup/App.vue";
 
+// 添加延时函数
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// 获取所有文档链接
+async function getAllDocLinks(): Promise<Array<{ token: string; title: string }>> {
+  const tocElement = document.getElementById('TOC-ROOT');
+  if (!tocElement) {
+    console.log('未找到目录元素');
+    return [];
+  }
+
+  const docs: Array<{ token: string; title: string }> = [];
+  const nodes = tocElement.querySelectorAll('.workspace-tree-view-node');
+  nodes.forEach(node => {
+    const uid = node.getAttribute('data-node-uid');
+    if (uid) {
+      const wikiToken = uid.split('wikiToken=')[1];
+      const titleElement = node.querySelector('.workspace-tree-view-node-content');
+      const title = titleElement ? titleElement.textContent?.trim() || wikiToken : wikiToken;
+      if (wikiToken) {
+        docs.push({ token: wikiToken, title });
+      }
+    }
+  });
+
+  return docs;
+}
+
+/**
+ * 导出飞书文档为PDF
+ */
+async function exportToPDF(filename: string = 'feishu-export.pdf'): Promise<void> {
+  // 获取目标元素
+  var element = document.querySelector('.root-block');
+
+  if (element) {
+    try {
+      // 在生成 PDF 前转换图片为 base64
+      await convertImagesToBase64(element);
+
+      // 生成 PDF
+      await html2pdf(element, {
+        margin: [10, 10, 10, 10],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: true
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      });
+
+      console.log(`PDF 已生成: ${filename}`);
+    } catch (error) {
+      console.error('PDF 生成过程中出错:', error);
+    }
+  } else {
+    console.error('找不到目标元素 .root-block');
+  }
+}
+
+// 导出单个文档
+async function exportSingleDoc(doc: { token: string; title: string }): Promise<void> {
+  try {
+    // 找到对应的按钮并点击
+    const button = document.querySelector(`[data-node-uid*="wikiToken=${doc.token}"]`);
+    if (button) {
+      (button as HTMLElement).click();
+      console.log(`正在处理文档: ${doc.title}`);
+
+      // 等待文档加载
+      await sleep(3000);
+
+      // 导出 PDF
+      await exportToPDF(`${doc.title}.pdf`);
+
+      // 等待 PDF 生成完成
+      await sleep(1000);
+    }
+  } catch (error) {
+    console.error(`处理文档 ${doc.title} 时出错:`, error);
+  }
+}
+
+// 导出所有文档
+async function exportAllDocs() {
+  const docs = await getAllDocLinks();
+  console.log(`找到 ${docs.length} 个文档`);
+
+  for (let i = 0; i < docs.length; i++) {
+    console.log(`正在导出第 ${i + 1}/${docs.length} 个文档: ${docs[i].title}`);
+    await exportSingleDoc(docs[i]);
+  }
+
+  console.log('所有文档导出完成');
+}
+
 export default defineContentScript({
   matches: ["*://*.feishu.cn/*"],
   cssInjectionMode: 'ui',
@@ -12,18 +113,15 @@ export default defineContentScript({
       position: 'inline',
       anchor: 'body',
       onMount: (container) => {
-        // Define how your UI will be mounted inside the container
         const app = createApp(App);
         app.mount(container);
         return app;
       },
       onRemove: (app) => {
-        // Unmount the app when the UI is removed
         app?.unmount();
       },
     });
 
-    // 4. Mount the UI
     ui.mount();
     console.log("Injecting script...");
     await injectScript("/injected.js", {
@@ -34,7 +132,7 @@ export default defineContentScript({
     // 添加事件监听器
     document.addEventListener('exportFeishuPDF', async () => {
       console.log('收到导出PDF事件');
-      await exportToPDF();
+      await exportAllDocs();
     });
 
     // 添加打印 TOC 的事件监听器
@@ -81,39 +179,6 @@ export default defineContentScript({
     });
   },
 });
-
-/**
- * 导出飞书文档为PDF
- */
-async function exportToPDF(): Promise<void> {
-  // 获取目标元素
-  var element = document.querySelector('.root-block');
-
-  if (element) {
-    try {
-      // 在生成 PDF 前转换图片为 base64
-      await convertImagesToBase64(element);
-
-      // 生成 PDF
-      html2pdf(element, {
-        margin: [10, 10, 10, 10],
-        filename: 'feishu-export.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true,
-          logging: true
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      });
-    } catch (error) {
-      console.error('PDF 生成过程中出错:', error);
-    }
-  } else {
-    console.error('找不到目标元素 .root-block');
-  }
-}
 
 /**
  * 将元素内的所有图片转换为 base64 格式

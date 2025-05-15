@@ -13,8 +13,8 @@ const handlePrintTOC = () => {
 </script>
 
 <template>
-  <button class="export-pdf-button" @click="handleClick">导出PDF1</button>
-  <button class="print-toc-button" @click="handlePrintTOC">打印TOC2</button>
+  <button class="export-pdf-button" @click="handleClick">导出PDF</button>
+  <button class="print-toc-button" @click="handlePrintTOC">打印TOC</button>
 </template>
 
 <style scoped>
