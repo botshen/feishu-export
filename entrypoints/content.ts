@@ -20,9 +20,9 @@ async function setZoom(zoomFactor: number): Promise<void> {
 }
 
 /**
- * 导出单个页面为PDF并返回Blob对象
+ * 导出单个页面为PDF，直接下载
  */
-async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false, restoreZoom: boolean = false): Promise<Blob> {
+async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false, restoreZoom: boolean = false): Promise<void> {
   try {
     // 仅在需要时设置页面缩放
     if (applyZoom) {
@@ -46,8 +46,8 @@ async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false,
     const pageTitle = title || titleElement?.textContent?.trim() || 'feishu-doc';
     console.log(`正在生成页面: ${pageTitle}`);
 
-    // 生成 PDF 但不自动下载
-    const pdfBlob = await html2pdf()
+    // 直接下载PDF
+    await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
         filename: `${pageTitle}.pdf`,
@@ -58,18 +58,15 @@ async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false,
           allowTaint: true,
           logging: true
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        output: 'blob'
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       })
       .from(element)
       .save();
 
-    console.log(`页面 PDF 已生成: ${pageTitle}`);
+    console.log(`页面 PDF 已生成并下载: ${pageTitle}`);
 
     // PDF生成完成后，仅在需要时恢复原始缩放
     if (restoreZoom) await setZoom(1.0);
-
-    return pdfBlob;
   } catch (error) {
     console.error('PDF 生成过程中出错:', error);
     // 出错时也要尝试恢复缩放
@@ -84,21 +81,7 @@ async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false,
   }
 }
 
-/**
- * 下载Blob对象
- */
-function downloadBlob(blob: Blob, filename: string): void {
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  link.click();
 
-  // 清理URL对象
-  setTimeout(() => {
-    URL.revokeObjectURL(link.href);
-    link.remove();
-  }, 100);
-}
 
 /**
  * 创建不受页面缩放影响的进度显示
@@ -202,14 +185,7 @@ async function exportToPDF(): Promise<void> {
     if (!tocElement) {
       console.log('未找到TOC元素，将只导出当前页面');
       // 单页导出才需要处理缩放
-      const pdfBlob = await exportSinglePageToPDF(undefined, true, true);
-
-      // 获取文档标题作为文件名
-      const titleElement = document.querySelector('.doc-title');
-      const title = titleElement?.textContent?.trim() || 'feishu-doc';
-      const safeTitle = title.replace(/[\\/:*?"<>|]/g, '_');
-
-      downloadBlob(pdfBlob, `${safeTitle}.pdf`);
+      await exportSinglePageToPDF(undefined, true, true);
       return;
     }
 
@@ -278,12 +254,12 @@ async function exportToPDF(): Promise<void> {
           // 更新状态
           progress.updateProgress(i + 1, buttonsWithText.length, button.text, '生成PDF中...');
 
-          // 导出当前页面为PDF，不处理缩放
-          const pdfBlob = await exportSinglePageToPDF(button.text);
-
-          // 直接下载当前页面的PDF
+          // 准备文件名
           const safeTitle = button.text.replace(/[\\/:*?"<>|]/g, '_');
-          downloadBlob(pdfBlob, `${safeDocTitle}_${i + 1}_${safeTitle}.pdf`);
+          const fileName = `${safeDocTitle}_${i + 1}_${safeTitle}`;
+
+          // 直接导出并下载当前页面为PDF，不处理缩放
+          await exportSinglePageToPDF(fileName);
 
           // 更新状态
           progress.updateProgress(i + 1, buttonsWithText.length, button.text, 'PDF已保存');
@@ -313,14 +289,7 @@ async function exportToPDF(): Promise<void> {
       console.log('批量导出完成');
     } else {
       console.log('没有找到任何目录项，将只导出当前页面');
-      const pdfBlob = await exportSinglePageToPDF(undefined, true, true);
-
-      // 获取文档标题作为文件名
-      const titleElement = document.querySelector('.doc-title');
-      const title = titleElement?.textContent?.trim() || 'feishu-doc';
-      const safeTitle = title.replace(/[\\/:*?"<>|]/g, '_');
-
-      downloadBlob(pdfBlob, `${safeTitle}.pdf`);
+      await exportSinglePageToPDF(undefined, true, true);
     }
   } catch (error) {
     console.error('批量导出过程中出错:', error);
