@@ -29,7 +29,7 @@ export default defineBackground(() => {
     // 创建一个分享菜单项
     browser.contextMenus.create({
       id: "exportPdf",
-      title: "导出pdf",
+      title: "批量导出pdf",
       contexts: ["all"],
       documentUrlPatterns: ["*://*.feishu.cn/*"]
     });

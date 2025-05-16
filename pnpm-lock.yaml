@@ -15,6 +15,9 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
     devDependencies:
+      '@wxt-dev/auto-icons':
+        specifier: ^1.0.2
+        version: 1.0.2(wxt@0.20.6(@types/node@22.15.17)(jiti@2.4.2)(rollup@4.40.2))
       '@wxt-dev/module-vue':
         specifier: ^1.0.2
         version: 1.0.2(vite@6.3.5(@types/node@22.15.17)(jiti@2.4.2))(vue@3.5.13(typescript@5.6.3))(wxt@0.20.6(@types/node@22.15.17)(jiti@2.4.2)(rollup@4.40.2))
@@ -80,6 +83,9 @@ packages:
     resolution: {integrity: sha1-BLw1yzotc4Xy4i3kD1QWIIgIMYM=, tarball: http://r.npm.sankuai.com/@devicefarmer/adbkit/download/@devicefarmer/adbkit-3.3.8.tgz}
     engines: {node: '>= 0.10.4'}
     hasBin: true
+
+  '@emnapi/runtime@1.4.3':
+    resolution: {integrity: sha1-wFZGZcgNyBxEitrCP5377WyDj30=, tarball: http://r.npm.sankuai.com/@emnapi/runtime/download/@emnapi/runtime-1.4.3.tgz}
 
   '@esbuild/aix-ppc64@0.25.4':
     resolution: {integrity: sha1-gw1kdsu8oMAFE2rwcwNka0GfEWI=, tarball: http://r.npm.sankuai.com/@esbuild/aix-ppc64/download/@esbuild/aix-ppc64-0.25.4.tgz}
@@ -228,6 +234,123 @@ packages:
   '@esbuild/win32-x64@0.25.4':
     resolution: {integrity: sha1-CxfsinCyOFgn1SMUwSUxYKC5usw=, tarball: http://r.npm.sankuai.com/@esbuild/win32-x64/download/@esbuild/win32-x64-0.25.4.tgz}
     engines: {node: '>=18'}
+    cpu: [x64]
+    os: [win32]
+
+  '@img/sharp-darwin-arm64@0.33.5':
+    resolution: {integrity: sha1-71taB4YoBfHoFFo3fIum6YgTygg=, tarball: http://r.npm.sankuai.com/@img/sharp-darwin-arm64/download/@img/sharp-darwin-arm64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@img/sharp-darwin-x64@0.33.5':
+    resolution: {integrity: sha1-4D00Uc2eZk+qcpSMxwpAPqQGPWE=, tarball: http://r.npm.sankuai.com/@img/sharp-darwin-x64/download/@img/sharp-darwin-x64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [x64]
+    os: [darwin]
+
+  '@img/sharp-libvips-darwin-arm64@1.0.4':
+    resolution: {integrity: sha1-RHxQJnAMAamTx4BOuK9fbphowH8=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-darwin-arm64/download/@img/sharp-libvips-darwin-arm64-1.0.4.tgz}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@img/sharp-libvips-darwin-x64@1.0.4':
+    resolution: {integrity: sha1-4EVvj3xiP52/vcdzg8qnIoHYYGI=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-darwin-x64/download/@img/sharp-libvips-darwin-x64-1.0.4.tgz}
+    cpu: [x64]
+    os: [darwin]
+
+  '@img/sharp-libvips-linux-arm64@1.0.4':
+    resolution: {integrity: sha1-l5scZsmpH3/yiTVW7yZ/kOvlFwQ=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linux-arm64/download/@img/sharp-libvips-linux-arm64-1.0.4.tgz}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-arm@1.0.5':
+    resolution: {integrity: sha1-mfki1OFSFuwgXctokbchv9KIQZc=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linux-arm/download/@img/sharp-libvips-linux-arm-1.0.5.tgz}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-s390x@1.0.4':
+    resolution: {integrity: sha1-+KXrHzdKCC9ys/ReL7JbgRiopc4=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linux-s390x/download/@img/sharp-libvips-linux-s390x-1.0.4.tgz}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-x64@1.0.4':
+    resolution: {integrity: sha1-1MRhnN0Vd3SQbhV3DuEZkxx+9eA=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linux-x64/download/@img/sharp-libvips-linux-x64-1.0.4.tgz}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linuxmusl-arm64@1.0.4':
+    resolution: {integrity: sha1-Fmd42g9I3Sve0fowM87mtYjw1dU=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linuxmusl-arm64/download/@img/sharp-libvips-linuxmusl-arm64-1.0.4.tgz}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-libvips-linuxmusl-x64@1.0.4':
+    resolution: {integrity: sha1-k3lOTXcgsHf8rT4CmC8vHCRnUf8=, tarball: http://r.npm.sankuai.com/@img/sharp-libvips-linuxmusl-x64/download/@img/sharp-libvips-linuxmusl-x64-1.0.4.tgz}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-linux-arm64@0.33.5':
+    resolution: {integrity: sha1-7bBpfnqCecn8gppg/DVkTEg5uyI=, tarball: http://r.npm.sankuai.com/@img/sharp-linux-arm64/download/@img/sharp-linux-arm64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-arm@0.33.5':
+    resolution: {integrity: sha1-QiwaNS57WDKEJXfcUWArzVtvXv8=, tarball: http://r.npm.sankuai.com/@img/sharp-linux-arm/download/@img/sharp-linux-arm-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-s390x@0.33.5':
+    resolution: {integrity: sha1-9cB3kmtI6X5KBNAE368XWXIFlmc=, tarball: http://r.npm.sankuai.com/@img/sharp-linux-s390x/download/@img/sharp-linux-s390x-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-x64@0.33.5':
+    resolution: {integrity: sha1-2Abgr9ca5ndcyH8NqPLQOnwiCcs=, tarball: http://r.npm.sankuai.com/@img/sharp-linux-x64/download/@img/sharp-linux-x64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linuxmusl-arm64@0.33.5':
+    resolution: {integrity: sha1-JSl1uRWJT7MVr13uoXRlHiCNPWs=, tarball: http://r.npm.sankuai.com/@img/sharp-linuxmusl-arm64/download/@img/sharp-linuxmusl-arm64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-linuxmusl-x64@0.33.5':
+    resolution: {integrity: sha1-P0YJrF2O+Ox9re6AtWCWGmD9T0g=, tarball: http://r.npm.sankuai.com/@img/sharp-linuxmusl-x64/download/@img/sharp-linuxmusl-x64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-wasm32@0.33.5':
+    resolution: {integrity: sha1-b0TzKDBp2TW7XKWBMVNXLz5vYaE=, tarball: http://r.npm.sankuai.com/@img/sharp-wasm32/download/@img/sharp-wasm32-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [wasm32]
+
+  '@img/sharp-win32-ia32@0.33.5':
+    resolution: {integrity: sha1-GgyDmkDFNR6YhWKMhfLl39ArUqk=, tarball: http://r.npm.sankuai.com/@img/sharp-win32-ia32/download/@img/sharp-win32-ia32-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+    cpu: [ia32]
+    os: [win32]
+
+  '@img/sharp-win32-x64@0.33.5':
+    resolution: {integrity: sha1-VvAJYv8MTg65PTSgR9KfqZXj40I=, tarball: http://r.npm.sankuai.com/@img/sharp-win32-x64/download/@img/sharp-win32-x64-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
     cpu: [x64]
     os: [win32]
 
@@ -461,6 +584,11 @@ packages:
   '@webext-core/match-patterns@1.0.3':
     resolution: {integrity: sha1-1ZDlBj4hpqg9JFcA3+tUifvZmnc=, tarball: http://r.npm.sankuai.com/@webext-core/match-patterns/download/@webext-core/match-patterns-1.0.3.tgz}
 
+  '@wxt-dev/auto-icons@1.0.2':
+    resolution: {integrity: sha512-Wp1pZnRysvDvxkkkys6ZPXL9O2Q9RDjooAZeV19vBg4NXPyE21qO2fu3QmIcug3fPzKzpcFa6dm1Y1dX8qhfEg==, tarball: https://registry.npmjs.org/@wxt-dev/auto-icons/-/auto-icons-1.0.2.tgz}
+    peerDependencies:
+      wxt: '>=0.19.0'
+
   '@wxt-dev/browser@0.0.317':
     resolution: {integrity: sha512-tpFr/OJjTlGY7FLIr950fNi9fIBLQQ9pRVDDajeqEMip5LsXFAxpbF4I1GAGUkdTJEghKQ8P5N9XnsAdbPBAOQ==, tarball: https://registry.npmjs.org/@wxt-dev/browser/-/browser-0.0.317.tgz}
 
@@ -686,6 +814,13 @@ packages:
   color-name@1.1.4:
     resolution: {integrity: sha1-wqCah6y95pVD3m9j+jmVyCbFNqI=, tarball: http://r.npm.sankuai.com/color-name/download/color-name-1.1.4.tgz}
 
+  color-string@1.9.1:
+    resolution: {integrity: sha1-RGf5FG8Db4Vbdk37W/hYK/NCx6Q=, tarball: http://r.npm.sankuai.com/color-string/download/color-string-1.9.1.tgz}
+
+  color@4.2.3:
+    resolution: {integrity: sha1-14HsteVyJO5D6pYnVgEHwODGRjo=, tarball: http://r.npm.sankuai.com/color/download/color-4.2.3.tgz}
+    engines: {node: '>=12.5.0'}
+
   colorette@2.0.20:
     resolution: {integrity: sha1-nreT5oMwZ/cjWQL807CZF6AAqVo=, tarball: http://r.npm.sankuai.com/colorette/download/colorette-2.0.20.tgz}
 
@@ -819,6 +954,10 @@ packages:
 
   destr@2.0.5:
     resolution: {integrity: sha1-fREv8bkl+40gefrFvbSpCXO1H9s=, tarball: http://r.npm.sankuai.com/destr/download/destr-2.0.5.tgz}
+
+  detect-libc@2.0.4:
+    resolution: {integrity: sha1-8EcVuLqBXlO02BCWVbZQimhlp+g=, tarball: http://r.npm.sankuai.com/detect-libc/download/detect-libc-2.0.4.tgz}
+    engines: {node: '>=8'}
 
   dom-serializer@2.0.0:
     resolution: {integrity: sha1-5BuALh7t+fbK4YPOXmIteJ19jlM=, tarball: http://r.npm.sankuai.com/dom-serializer/download/dom-serializer-2.0.0.tgz}
@@ -1092,6 +1231,9 @@ packages:
 
   is-arrayish@0.2.1:
     resolution: {integrity: sha1-d8mYQFJ6qOyxqLppe4BkWnqSap0=, tarball: http://r.npm.sankuai.com/is-arrayish/download/is-arrayish-0.2.1.tgz}
+
+  is-arrayish@0.3.2:
+    resolution: {integrity: sha1-RXSirlb3qyBolvtDHq7tBm/fjwM=, tarball: http://r.npm.sankuai.com/is-arrayish/download/is-arrayish-0.3.2.tgz}
 
   is-docker@2.2.1:
     resolution: {integrity: sha1-M+6r4jz+hvFL3kQIoCwM+4U6zao=, tarball: http://r.npm.sankuai.com/is-docker/download/is-docker-2.2.1.tgz}
@@ -1671,6 +1813,10 @@ packages:
   setimmediate@1.0.5:
     resolution: {integrity: sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=, tarball: http://r.npm.sankuai.com/setimmediate/download/setimmediate-1.0.5.tgz}
 
+  sharp@0.33.5:
+    resolution: {integrity: sha1-E+DkEwzDCdapSXWWcVJAsuwMWU4=, tarball: http://r.npm.sankuai.com/sharp/download/sharp-0.33.5.tgz}
+    engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
+
   shebang-command@2.0.0:
     resolution: {integrity: sha1-zNCvT4g1+9wmW4JGGq8MNmY/NOo=, tarball: http://r.npm.sankuai.com/shebang-command/download/shebang-command-2.0.0.tgz}
     engines: {node: '>=8'}
@@ -1691,6 +1837,9 @@ packages:
   signal-exit@4.1.0:
     resolution: {integrity: sha1-lSGIwcvVRgcOLdIND0HArgUwywQ=, tarball: http://r.npm.sankuai.com/signal-exit/download/signal-exit-4.1.0.tgz}
     engines: {node: '>=14'}
+
+  simple-swizzle@0.2.2:
+    resolution: {integrity: sha1-pNprY1/8zMoz9w0Xy5JZLeleVXo=, tarball: http://r.npm.sankuai.com/simple-swizzle/download/simple-swizzle-0.2.2.tgz}
 
   sisteransi@1.0.5:
     resolution: {integrity: sha1-E01oEpd1ZDfMBcoBNw06elcQde0=, tarball: http://r.npm.sankuai.com/sisteransi/download/sisteransi-1.0.5.tgz}
@@ -2117,6 +2266,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@emnapi/runtime@1.4.3':
+    dependencies:
+      tslib: 2.8.1
+    optional: true
+
   '@esbuild/aix-ppc64@0.25.4':
     optional: true
 
@@ -2190,6 +2344,81 @@ snapshots:
     optional: true
 
   '@esbuild/win32-x64@0.25.4':
+    optional: true
+
+  '@img/sharp-darwin-arm64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-arm64': 1.0.4
+    optional: true
+
+  '@img/sharp-darwin-x64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-x64': 1.0.4
+    optional: true
+
+  '@img/sharp-libvips-darwin-arm64@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-darwin-x64@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-linux-arm64@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-linux-arm@1.0.5':
+    optional: true
+
+  '@img/sharp-libvips-linux-s390x@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-linux-x64@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-linuxmusl-arm64@1.0.4':
+    optional: true
+
+  '@img/sharp-libvips-linuxmusl-x64@1.0.4':
+    optional: true
+
+  '@img/sharp-linux-arm64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm64': 1.0.4
+    optional: true
+
+  '@img/sharp-linux-arm@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm': 1.0.5
+    optional: true
+
+  '@img/sharp-linux-s390x@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-s390x': 1.0.4
+    optional: true
+
+  '@img/sharp-linux-x64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-x64': 1.0.4
+    optional: true
+
+  '@img/sharp-linuxmusl-arm64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-arm64': 1.0.4
+    optional: true
+
+  '@img/sharp-linuxmusl-x64@0.33.5':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-x64': 1.0.4
+    optional: true
+
+  '@img/sharp-wasm32@0.33.5':
+    dependencies:
+      '@emnapi/runtime': 1.4.3
+    optional: true
+
+  '@img/sharp-win32-ia32@0.33.5':
+    optional: true
+
+  '@img/sharp-win32-x64@0.33.5':
     optional: true
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
@@ -2403,6 +2632,13 @@ snapshots:
       is-potential-custom-element-name: 1.0.1
 
   '@webext-core/match-patterns@1.0.3': {}
+
+  '@wxt-dev/auto-icons@1.0.2(wxt@0.20.6(@types/node@22.15.17)(jiti@2.4.2)(rollup@4.40.2))':
+    dependencies:
+      defu: 6.1.4
+      fs-extra: 11.3.0
+      sharp: 0.33.5
+      wxt: 0.20.6(@types/node@22.15.17)(jiti@2.4.2)(rollup@4.40.2)
 
   '@wxt-dev/browser@0.0.317':
     dependencies:
@@ -2637,6 +2873,16 @@ snapshots:
 
   color-name@1.1.4: {}
 
+  color-string@1.9.1:
+    dependencies:
+      color-name: 1.1.4
+      simple-swizzle: 0.2.2
+
+  color@4.2.3:
+    dependencies:
+      color-convert: 2.0.1
+      color-string: 1.9.1
+
   colorette@2.0.20: {}
 
   commander@2.9.0:
@@ -2751,6 +2997,8 @@ snapshots:
   dequal@2.0.3: {}
 
   destr@2.0.5: {}
+
+  detect-libc@2.0.4: {}
 
   dom-serializer@2.0.0:
     dependencies:
@@ -3037,6 +3285,8 @@ snapshots:
       is-relative: 0.1.3
 
   is-arrayish@0.2.1: {}
+
+  is-arrayish@0.3.2: {}
 
   is-docker@2.2.1: {}
 
@@ -3656,6 +3906,32 @@ snapshots:
 
   setimmediate@1.0.5: {}
 
+  sharp@0.33.5:
+    dependencies:
+      color: 4.2.3
+      detect-libc: 2.0.4
+      semver: 7.7.1
+    optionalDependencies:
+      '@img/sharp-darwin-arm64': 0.33.5
+      '@img/sharp-darwin-x64': 0.33.5
+      '@img/sharp-libvips-darwin-arm64': 1.0.4
+      '@img/sharp-libvips-darwin-x64': 1.0.4
+      '@img/sharp-libvips-linux-arm': 1.0.5
+      '@img/sharp-libvips-linux-arm64': 1.0.4
+      '@img/sharp-libvips-linux-s390x': 1.0.4
+      '@img/sharp-libvips-linux-x64': 1.0.4
+      '@img/sharp-libvips-linuxmusl-arm64': 1.0.4
+      '@img/sharp-libvips-linuxmusl-x64': 1.0.4
+      '@img/sharp-linux-arm': 0.33.5
+      '@img/sharp-linux-arm64': 0.33.5
+      '@img/sharp-linux-s390x': 0.33.5
+      '@img/sharp-linux-x64': 0.33.5
+      '@img/sharp-linuxmusl-arm64': 0.33.5
+      '@img/sharp-linuxmusl-x64': 0.33.5
+      '@img/sharp-wasm32': 0.33.5
+      '@img/sharp-win32-ia32': 0.33.5
+      '@img/sharp-win32-x64': 0.33.5
+
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -3669,6 +3945,10 @@ snapshots:
   signal-exit@3.0.7: {}
 
   signal-exit@4.1.0: {}
+
+  simple-swizzle@0.2.2:
+    dependencies:
+      is-arrayish: 0.3.2
 
   sisteransi@1.0.5: {}
 
