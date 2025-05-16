@@ -28,13 +28,15 @@ async function setZoom(zoomFactor: number): Promise<void> {
 /**
  * 导出单个页面为PDF并返回Blob对象
  */
-async function exportSinglePageToPDF(title?: string, restoreZoom: boolean = true): Promise<Blob> {
+async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false, restoreZoom: boolean = false): Promise<Blob> {
   try {
-    // 设置页面缩放为 0.01 (1%)
-    await setZoom(0.01);
-
-    // 等待 2 秒，确保缩放效果完全应用
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // 仅在需要时设置页面缩放
+    if (applyZoom) {
+      // 设置页面缩放为 0.01 (1%)
+      await setZoom(0.01);
+      // 等待 2 秒，确保缩放效果完全应用
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
 
     // 获取目标元素
     var element = document.querySelector('.root-block');
@@ -118,6 +120,7 @@ function createProgressDisplay(): {
   updateProgress: (current: number, total: number, title: string, status: string) => void;
   setComplete: (total: number) => void;
   remove: () => void;
+  updateScaling: (zoomFactor: number) => void;
 } {
   // 创建一个固定在右上角的div元素
   const container = document.createElement('div');
@@ -132,10 +135,10 @@ function createProgressDisplay(): {
   container.style.zIndex = '99999999'; // 极高的z-index确保显示在最上层
   container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
   container.style.fontFamily = 'Arial, sans-serif';
-
-  // 设置一个极大的transform值以抵消页面缩放
-  container.style.transform = 'scale(4)';
   container.style.transformOrigin = 'top right';
+
+  // 默认不缩放
+  container.style.transform = 'scale(1)';
 
   // 创建标题
   const title = document.createElement('div');
@@ -197,6 +200,15 @@ function createProgressDisplay(): {
     },
     remove: () => {
       container.remove();
+    },
+    updateScaling: (zoomFactor: number) => {
+      // 根据页面缩放因子动态调整UI缩放
+      // 当页面缩放为0.01时，放大100倍会太大，放大4倍刚好
+      if (zoomFactor <= 0.01) {
+        container.style.transform = 'scale(4)';
+      } else {
+        container.style.transform = 'scale(1)';
+      }
     }
   };
 }
@@ -212,7 +224,8 @@ async function exportToPDF(): Promise<void> {
     const tocElement = document.getElementById('TOC-ROOT');
     if (!tocElement) {
       console.log('未找到TOC元素，将只导出当前页面');
-      const pdfBlob = await exportSinglePageToPDF();
+      // 单页导出才需要处理缩放
+      const pdfBlob = await exportSinglePageToPDF(undefined, true, true);
 
       // 获取文档标题作为文件名
       const titleElement = document.querySelector('.doc-title');
@@ -260,6 +273,13 @@ async function exportToPDF(): Promise<void> {
       // 创建进度显示
       const progress = createProgressDisplay();
 
+      // 在开始导出前设置缩放为0.01
+      await setZoom(0.01);
+      // 等待2秒确保缩放效果完全应用
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      // 根据缩放更新进度显示的缩放比例
+      progress.updateScaling(0.01);
+
       // 按顺序处理每个按钮，从第一个开始
       for (let i = 0; i < buttonsWithText.length; i++) {
         const button = buttonsWithText[i];
@@ -281,8 +301,8 @@ async function exportToPDF(): Promise<void> {
           // 更新状态
           progress.updateProgress(i + 1, buttonsWithText.length, button.text, '生成PDF中...');
 
-          // 导出当前页面为PDF，仅在最后一项时还原缩放
-          const pdfBlob = await exportSinglePageToPDF(button.text, isLastItem);
+          // 导出当前页面为PDF，不处理缩放
+          const pdfBlob = await exportSinglePageToPDF(button.text);
 
           // 直接下载当前页面的PDF
           const safeTitle = button.text.replace(/[\\/:*?"<>|]/g, '_');
@@ -301,6 +321,11 @@ async function exportToPDF(): Promise<void> {
         }
       }
 
+      // 完成所有导出后才恢复缩放
+      await setZoom(1.0);
+      // 更新进度显示的缩放
+      progress.updateScaling(1.0);
+
       // 完成所有导出后更新进度条
       progress.setComplete(buttonsWithText.length);
 
@@ -312,7 +337,7 @@ async function exportToPDF(): Promise<void> {
       console.log('批量导出完成');
     } else {
       console.log('没有找到任何目录项，将只导出当前页面');
-      const pdfBlob = await exportSinglePageToPDF();
+      const pdfBlob = await exportSinglePageToPDF(undefined, true, true);
 
       // 获取文档标题作为文件名
       const titleElement = document.querySelector('.doc-title');
@@ -324,6 +349,12 @@ async function exportToPDF(): Promise<void> {
   } catch (error) {
     console.error('批量导出过程中出错:', error);
     alert('导出过程中出错，请查看控制台获取详细信息');
+    // 确保在出错时也恢复缩放
+    try {
+      await setZoom(1.0);
+    } catch (e) {
+      console.error('恢复缩放失败:', e);
+    }
   }
 }
 
