@@ -5,22 +5,18 @@ import html2pdf from "html2pdf.js";
  * 设置页面缩放
  */
 async function setZoom(zoomFactor: number): Promise<void> {
-  return new Promise((resolve, reject) => {
-    browser.runtime.sendMessage({ action: 'setZoom', zoomFactor })
-      .then(response => {
-        if (response && response.success) {
-          console.log(`页面缩放已设置为 ${zoomFactor * 100}%`);
-          resolve();
-        } else {
-          console.error('设置缩放失败:', response?.error || '未知错误');
-          reject(new Error(response?.error || '设置缩放失败'));
-        }
-      })
-      .catch(error => {
-        console.error('发送缩放请求失败:', error);
-        reject(error);
-      });
-  });
+  try {
+    const response = await browser.runtime.sendMessage({ action: 'setZoom', zoomFactor });
+
+    if (response && response.success) {
+      console.log(`页面缩放已设置为 ${zoomFactor * 100}%`);
+    } else {
+      throw new Error(response?.error || '设置缩放失败');
+    }
+  } catch (error) {
+    console.error('发送缩放请求失败:', error);
+    throw error;
+  }
 }
 
 /**
@@ -30,56 +26,50 @@ async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false,
   try {
     // 仅在需要时设置页面缩放
     if (applyZoom) {
-      // 设置页面缩放为 0.01 (1%)
-      await setZoom(0.01);
-      // 等待 2 秒，确保缩放效果完全应用
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await setZoom(0.01); // 设置页面缩放为 0.01 (1%)
+      await new Promise(resolve => setTimeout(resolve, 2000)); // 等待缩放效果应用
     }
 
     // 获取目标元素
-    var element = document.querySelector('.root-block');
+    const element = document.querySelector('.root-block');
     console.log('找到目标元素:', element);
 
-    if (element) {
-      // 获取文档标题作为文件名
-      const titleElement = document.querySelector('.doc-title');
-      const pageTitle = title || titleElement?.textContent?.trim() || 'feishu-doc';
-      console.log(`正在生成页面: ${pageTitle}`);
-
-      // 生成 PDF 但不自动下载
-      const pdfBlob = await html2pdf()
-        .set({
-          margin: [10, 10, 10, 10],
-          filename: `${pageTitle}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            logging: true
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-          output: 'blob'
-        })
-        .from(element)
-        .save();
-
-      console.log(`页面 PDF 已生成: ${pageTitle}`);
-
-      // PDF生成完成后，仅在需要时恢复原始缩放
-      if (restoreZoom) {
-        await setZoom(1.0);
-      }
-
-      return pdfBlob;
-    } else {
+    if (!element) {
       console.error('找不到目标元素 .root-block');
       // 如果找不到元素也要恢复缩放
-      if (restoreZoom) {
-        await setZoom(1.0);
-      }
+      if (restoreZoom) await setZoom(1.0);
       throw new Error('找不到目标元素');
     }
+
+    // 获取文档标题作为文件名
+    const titleElement = document.querySelector('.doc-title');
+    const pageTitle = title || titleElement?.textContent?.trim() || 'feishu-doc';
+    console.log(`正在生成页面: ${pageTitle}`);
+
+    // 生成 PDF 但不自动下载
+    const pdfBlob = await html2pdf()
+      .set({
+        margin: [10, 10, 10, 10],
+        filename: `${pageTitle}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          logging: true
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        output: 'blob'
+      })
+      .from(element)
+      .save();
+
+    console.log(`页面 PDF 已生成: ${pageTitle}`);
+
+    // PDF生成完成后，仅在需要时恢复原始缩放
+    if (restoreZoom) await setZoom(1.0);
+
+    return pdfBlob;
   } catch (error) {
     console.error('PDF 生成过程中出错:', error);
     // 出错时也要尝试恢复缩放
@@ -113,30 +103,26 @@ function downloadBlob(blob: Blob, filename: string): void {
 /**
  * 创建不受页面缩放影响的进度显示
  */
-function createProgressDisplay(): {
-  element: HTMLElement;
-  updateProgress: (current: number, total: number, title: string, status: string) => void;
-  setComplete: (total: number) => void;
-  remove: () => void;
-  updateScaling: (zoomFactor: number) => void;
-} {
+function createProgressDisplay() {
   // 创建一个固定在右上角的div元素
   const container = document.createElement('div');
-  container.style.position = 'fixed';
-  container.style.top = '10px';
-  container.style.right = '10px';
-  container.style.width = '300px';
-  container.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-  container.style.color = 'white';
-  container.style.padding = '15px';
-  container.style.borderRadius = '5px';
-  container.style.zIndex = '99999999'; // 极高的z-index确保显示在最上层
-  container.style.boxShadow = '0 4px 8px rgba(0,0,0,0.3)';
-  container.style.fontFamily = 'Arial, sans-serif';
-  container.style.transformOrigin = 'top right';
+  const styles = {
+    position: 'fixed',
+    top: '10px',
+    right: '10px',
+    width: '300px',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    color: 'white',
+    padding: '15px',
+    borderRadius: '5px',
+    zIndex: '99999999',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+    fontFamily: 'Arial, sans-serif',
+    transformOrigin: 'top right',
+    transform: 'scale(1)'
+  };
 
-  // 默认不缩放
-  container.style.transform = 'scale(1)';
+  Object.assign(container.style, styles);
 
   // 创建标题
   const title = document.createElement('div');
@@ -196,17 +182,10 @@ function createProgressDisplay(): {
       status.textContent = '所有PDF已导出';
       progressBar.style.backgroundColor = '#2196F3';
     },
-    remove: () => {
-      container.remove();
-    },
+    remove: () => container.remove(),
     updateScaling: (zoomFactor: number) => {
-      // 根据页面缩放因子动态调整UI缩放
-      // 当页面缩放为0.01时，放大100倍会太大，放大4倍刚好
-      if (zoomFactor <= 0.01) {
-        container.style.transform = 'scale(4)';
-      } else {
-        container.style.transform = 'scale(1)';
-      }
+      // 当页面缩放为0.01时，放大4倍刚好
+      container.style.transform = zoomFactor <= 0.01 ? 'scale(4)' : 'scale(1)';
     }
   };
 }
@@ -246,10 +225,10 @@ async function exportToPDF(): Promise<void> {
     const buttonsWithText: { button: Element; text: string }[] = [];
 
     // 遍历所有符合条件的 div，找出所有的 button 元素
-    filteredDivs.forEach((div, index) => {
+    filteredDivs.forEach(div => {
       const buttons = div.querySelectorAll('[role="button"]');
       if (buttons.length > 0) {
-        buttons.forEach((button, buttonIndex) => {
+        buttons.forEach(button => {
           const buttonText = (button as HTMLElement).textContent?.trim();
           if (buttonText) {
             buttonsWithText.push({ button, text: buttonText });
@@ -282,7 +261,6 @@ async function exportToPDF(): Promise<void> {
       // 按顺序处理每个按钮，从第一个开始
       for (let i = 0; i < buttonsWithText.length; i++) {
         const button = buttonsWithText[i];
-        const isLastItem = i === buttonsWithText.length - 1;
 
         // 更新进度显示
         progress.updateProgress(i + 1, buttonsWithText.length, button.text, '准备导出页面');
@@ -316,7 +294,6 @@ async function exportToPDF(): Promise<void> {
           console.error(`处理页面 "${button.text}" 时出错:`, error);
           progress.updateProgress(i + 1, buttonsWithText.length, button.text, '处理出错，跳过');
           // 继续处理下一个页面
-          continue;
         }
       }
 
@@ -361,19 +338,13 @@ export default defineContentScript({
   matches: ["*://*.feishu.cn/*"],
   main() {
     // 添加导出PDF事件监听器
-    document.addEventListener('exportFeishuPDF', async () => {
-      console.log('收到导出PDF事件');
-      await exportToPDF();
-    });
+    document.addEventListener('exportFeishuPDF', () => exportToPDF());
 
     // 添加来自 background 的消息监听器
     browser.runtime.onMessage.addListener((message) => {
-      console.log('content script 收到消息:', message);
       if (message.action === 'triggerExportPdf') {
         console.log('触发 exportFeishuPDF 事件');
-        // 创建并分发自定义事件
-        const event = new CustomEvent('exportFeishuPDF');
-        document.dispatchEvent(event);
+        document.dispatchEvent(new CustomEvent('exportFeishuPDF'));
         return true;
       }
       return false;
