@@ -271,12 +271,13 @@ async function exportToPDF(): Promise<void> {
       // 创建进度显示
       const progress = createProgressDisplay();
 
-      // 在开始导出前设置缩放为0.01
+      // 先放大进度显示
+      progress.updateScaling(0.01);
+
+      // 然后设置页面缩放为0.01
       await setZoom(0.01);
       // 等待2秒确保缩放效果完全应用
       await new Promise(resolve => setTimeout(resolve, 2000));
-      // 根据缩放更新进度显示的缩放比例
-      progress.updateScaling(0.01);
 
       // 按顺序处理每个按钮，从第一个开始
       for (let i = 0; i < buttonsWithText.length; i++) {
