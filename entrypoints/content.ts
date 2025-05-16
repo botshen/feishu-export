@@ -1,7 +1,5 @@
 // @ts-ignore
 import html2pdf from "html2pdf.js";
-import { createApp } from 'vue';
-import App from "../components/App.vue";
 
 /**
  * 设置页面缩放
@@ -360,29 +358,24 @@ async function exportToPDF(): Promise<void> {
 
 export default defineContentScript({
   matches: ["*://*.feishu.cn/*"],
-  cssInjectionMode: 'ui',
-  async main(ctx) {
-    const ui = await createShadowRootUi(ctx, {
-      name: 'example-ui',
-      position: 'inline',
-      anchor: 'body',
-      onMount: (container) => {
-        const app = createApp(App);
-        app.mount(container);
-        return app;
-      },
-      onRemove: (app) => {
-        app?.unmount();
-      },
-    });
-
-    ui.mount();
-
-
+  main() {
     // 添加导出PDF事件监听器
     document.addEventListener('exportFeishuPDF', async () => {
       console.log('收到导出PDF事件');
       await exportToPDF();
+    });
+
+    // 添加来自 background 的消息监听器
+    browser.runtime.onMessage.addListener((message) => {
+      console.log('content script 收到消息:', message);
+      if (message.action === 'triggerExportPdf') {
+        console.log('触发 exportFeishuPDF 事件');
+        // 创建并分发自定义事件
+        const event = new CustomEvent('exportFeishuPDF');
+        document.dispatchEvent(event);
+        return true;
+      }
+      return false;
     });
   },
 });

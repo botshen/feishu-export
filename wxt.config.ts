@@ -7,6 +7,6 @@ export default defineConfig({
     disabled: true,
   },
   manifest: {
-    permissions: ['tabs'],
+    permissions: ['tabs', "contextMenus",],
   },
 });
