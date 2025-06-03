@@ -7,7 +7,7 @@ export default defineConfig({
     disabled: true,
   },
   manifest: {
-    permissions: ['tabs', "contextMenus",],
+    permissions: ['tabs', "contextMenus", 'activeTab', 'downloads'],
   },
   autoIcons: {
     grayscaleOnDevelopment: false,
