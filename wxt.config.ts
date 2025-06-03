@@ -8,6 +8,12 @@ export default defineConfig({
   },
   manifest: {
     permissions: ['tabs', "contextMenus", 'activeTab', 'downloads'],
+    web_accessible_resources: [
+      {
+        resources: ['/injected.js'],
+        matches: ['<all_urls>'],
+      },
+    ],
   },
   autoIcons: {
     grayscaleOnDevelopment: false,
