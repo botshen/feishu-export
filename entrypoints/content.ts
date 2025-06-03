@@ -2,50 +2,8 @@ import { exportToPDF } from "./export-pdf/pdf-export";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { injectScriptToPage } from "../utils";
+import { collectAllBlocks } from "./export-pdf/pdf-util";
 
-async function collectAllBlocks(block_sequence: string[]) {
-  const container = document.querySelector('.bear-web-x-container.docx-in-wiki') as HTMLElement;
-  if (!container) return null;
-
-  // Create a temporary container to store all blocks
-  const tempContainer = document.createElement('div');
-  tempContainer.className = 'render-unit-wrapper';
-  
-  const viewportHeight = container.clientHeight;
-  const totalHeight = container.scrollHeight;
-  const collectedBlocks = new Set<string>();
-  
-  // Function to collect visible blocks
-  const collectVisibleBlocks = () => {
-    const blocks = document.querySelectorAll('[data-record-id]');
-    blocks.forEach(block => {
-      const recordId = block.getAttribute('data-record-id');
-      if (recordId && block_sequence.includes(recordId) && !collectedBlocks.has(recordId)) {
-        collectedBlocks.add(recordId);
-        tempContainer.appendChild(block.cloneNode(true));
-      }
-    });
-  };
-
-  // Initial collection
-  collectVisibleBlocks();
-  
-  // Scroll and collect
-  let currentScroll = 0;
-  while (currentScroll < totalHeight && collectedBlocks.size < block_sequence.length) {
-    currentScroll += viewportHeight;
-    container.scrollTo(0, currentScroll);
-    
-    // Wait for content to load
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    collectVisibleBlocks();
-  }
-
-  // Reset scroll position
-  container.scrollTo(0, 0);
-  
-  return tempContainer;
-}
 
 
 export default defineContentScript({
@@ -76,7 +34,7 @@ export default defineContentScript({
       const customEvent = event as CustomEvent;
       console.info('收到来自 injected 脚本的消息:', customEvent.detail);
       const block_sequence = customEvent.detail.data.window.block_sequence;
-      const block_sequence_new = block_sequence.slice(1, -1);
+      const block_sequence_new = block_sequence.slice(0, -1);
 
       // Collect all blocks
       const completeElement = await collectAllBlocks(block_sequence_new);
