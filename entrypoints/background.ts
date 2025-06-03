@@ -59,8 +59,8 @@ export default defineBackground(() => {
         break;
       case "captureScreen":
         console.log("点击了截屏");
-        if (tab) {
-          await captureScreen(tab);
+        if (tab && tab.id) {
+          await browser.tabs.sendMessage(tab.id, { action: "triggerCaptureScreen", tab});
         }
         break;
       default:
