@@ -2,8 +2,6 @@ export default defineBackground(() => {
 
   // 监听来自内容脚本的消息
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    console.log('收到消息:', message);
-
     if (message.action === 'setZoom') {
       const tabId = sender.tab?.id;
       const zoomFactor = message.zoomFactor;
