@@ -24,10 +24,10 @@ export async function collectAllBlocks() {
   const tempContainer = document.createElement('div');
   tempContainer.className = 'render-unit-wrapper';
 
-  const FIXED_HEADER_HEIGHT = 65; // 固定任务栏高度
+  const FIXED_HEADER_HEIGHT = 65;
   const viewportHeight = container.clientHeight - FIXED_HEADER_HEIGHT;
   const totalHeight = container.scrollHeight;
-  const bannerHeight = 500; // 顶部 banner 高度
+  const bannerHeight = 500;
   const collectedBlocks = new Map<number, HTMLElement>();
 
   // Function to collect visible blocks
@@ -43,12 +43,12 @@ export async function collectAllBlocks() {
 
   // Initial collection after scrolling past banner
   container.scrollTo(0, bannerHeight);
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 300));
   collectVisibleBlocks();
 
   // Scroll and collect with overlap to ensure no content is missed
   let currentScroll = bannerHeight;
-  const scrollStep = Math.floor(viewportHeight * 0.8); // 使用 80% 视口高度作为滚动步长，确保有重叠
+  const scrollStep = Math.floor(viewportHeight * 0.8);
   let lastCollectedSize = 0;
   let noNewBlocksCount = 0;
 
@@ -56,11 +56,10 @@ export async function collectAllBlocks() {
     currentScroll += scrollStep;
     container.scrollTo(0, currentScroll);
 
-    // Wait for content to load
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // Wait for content to load with shorter delay
+    await new Promise(resolve => setTimeout(resolve, 300));
     collectVisibleBlocks();
 
-    // Check if we found any new blocks
     if (collectedBlocks.size === lastCollectedSize) {
       noNewBlocksCount++;
     } else {
@@ -69,16 +68,24 @@ export async function collectAllBlocks() {
     }
   }
 
-  // 确保滚动到真正的底部并等待足够长的时间
+  // Scroll to bottom and collect final blocks
   container.scrollTo(0, totalHeight);
-  await new Promise(resolve => setTimeout(resolve, 2000)); // 增加等待时间
+  // Use a dynamic waiting time based on the amount of new content
+  const finalBlockCount = collectedBlocks.size;
+  await new Promise(resolve => setTimeout(resolve, 500));
   collectVisibleBlocks();
 
-  // 平滑地滚动回顶部
+  // If we found new blocks at the bottom, wait a bit more
+  if (collectedBlocks.size > finalBlockCount) {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    collectVisibleBlocks();
+  }
+
+  // Smooth scroll back to top with reduced wait time
   container.style.scrollBehavior = 'smooth';
   container.scrollTo(0, 0);
   container.style.scrollBehavior = 'auto';
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  await new Promise(resolve => setTimeout(resolve, 300));
 
   // Sort blocks by data-block-id and append to tempContainer
   const sortedBlocks = Array.from(collectedBlocks.entries())
