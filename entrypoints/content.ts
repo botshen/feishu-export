@@ -1,7 +1,6 @@
 import { exportToPDF } from "./export-pdf/pdf-export";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
-import { injectScriptToPage } from "../utils";
 import { collectAllBlocks } from "./export-pdf/pdf-util";
 import { exportToImg } from "./export-img/img-export";
 
@@ -15,9 +14,6 @@ export default defineContentScript({
   ],
   runAt: 'document_end',
   async main() {
-    console.log('Content script loaded and running');
-    injectScriptToPage()
-    // 添加来自 background 的消息监听器
     browser.runtime.onMessage.addListener(async (message) => {
       if (message.action === 'triggerExportPdf') {
         await exportToPDF();

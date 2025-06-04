@@ -1,6 +1,6 @@
 {
   "name": "飞书批量导出",
-  "description": "强大的飞书pdf导出工具",
+  "description": "强大的飞书批量pdf导出工具",
   "private": true,
   "version": "0.0.3",
   "type": "module",
