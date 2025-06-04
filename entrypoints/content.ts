@@ -49,9 +49,9 @@ export default defineContentScript({
         .set({
           margin: [10, 10, 10, 10],
           filename: `xxx.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
+          image: { type: 'jpeg', quality: 1 },
           html2canvas: {
-            scale: 1.5,
+            scale: 4,
             useCORS: true,
             allowTaint: true,
             logging: true,
