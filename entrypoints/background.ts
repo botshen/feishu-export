@@ -1,4 +1,3 @@
-import { captureScreen } from './export-img/img-export';
 
 export default defineBackground(() => {
 
