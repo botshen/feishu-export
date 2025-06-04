@@ -51,10 +51,26 @@ export default defineContentScript({
           filename: `xxx.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
-            scale: 2,
+            scale: 1.5,
             useCORS: true,
             allowTaint: true,
-            logging: true
+            logging: true,
+            imageTimeout: 0,
+            onclone: (clonedDoc: Document) => {
+              return new Promise(resolve => {
+                setTimeout(() => {
+                  const images = clonedDoc.getElementsByTagName('img');
+                  const imagePromises = Array.from(images).map((img: HTMLImageElement) => {
+                    if (img.complete) return Promise.resolve();
+                    return new Promise(imgResolve => {
+                      img.onload = imgResolve;
+                      img.onerror = imgResolve;
+                    });
+                  });
+                  Promise.all(imagePromises).then(resolve);
+                }, 1000);
+              });
+            }
           },
           jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         })
