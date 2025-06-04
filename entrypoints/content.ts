@@ -33,11 +33,18 @@ export default defineContentScript({
 
         console.log('收集完成，准备导出 PDF');
 
+        // 获取文档标题
+        const docTitleElement = document.querySelector('.doc-title');
+        const docTitle = docTitleElement?.textContent?.trim() || 'feishu-doc';
+        const safeDocTitle = docTitle.replace(/[\\/:*?"<>|]/g, '_');
+
+        console.log(`使用文档标题: ${safeDocTitle}`);
+
         // Export to PDF with collected content
         await html2pdf()
           .set({
             margin: [10, 10, 10, 10],
-            filename: `xxx.pdf`,
+            filename: `${safeDocTitle}.pdf`,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: {
               scale: 4,

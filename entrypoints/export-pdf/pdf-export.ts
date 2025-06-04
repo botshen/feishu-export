@@ -19,11 +19,25 @@ async function exportSinglePageToPDF(title?: string): Promise<void> {
 
     console.log('收集完成，准备导出 PDF');
 
+    // 确定文件名：优先使用传入的title，否则获取文档标题
+    let fileName: string;
+    if (title) {
+      fileName = `${title}.pdf`;
+    } else {
+      // 获取文档标题
+      const docTitleElement = document.querySelector('.doc-title');
+      const docTitle = docTitleElement?.textContent?.trim() || 'feishu-doc';
+      const safeDocTitle = docTitle.replace(/[\\/:*?"<>|]/g, '_');
+      fileName = `${safeDocTitle}.pdf`;
+    }
+
+    console.log(`使用文件名: ${fileName}`);
+
     // Export to PDF with collected content
     await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
-        filename: `xxx.pdf`,
+        filename: fileName,
         image: { type: 'jpeg', quality: 1 },
         html2canvas: {
           scale: 4,
@@ -145,9 +159,9 @@ export async function exportToPDF(): Promise<void> {
           // 更新状态
           progress.updateProgress(i + 1, buttonsWithText.length, button.text, '生成PDF中...');
 
-          // 准备文件名
+          // 准备文件名 - 只使用序号和页面标题
           const safeTitle = button.text.replace(/[\\/:*?"<>|]/g, '_');
-          const fileName = `${safeDocTitle}_${i + 1}_${safeTitle}`;
+          const fileName = `${i + 1}_${safeTitle}`;
 
           // 直接导出并下载当前页面为PDF，不处理缩放
           await exportSinglePageToPDF(fileName);
