@@ -32,9 +32,7 @@ export default defineContentScript({
     });
     window.addEventListener('message-to-content', (async (event: Event) => {
       const customEvent = event as CustomEvent;
-      console.info('收到来自 injected 脚本的消息:', customEvent.detail);
       const block_sequence = customEvent.detail.data.window.block_sequence;
-      console.log('block_sequence', block_sequence)
       const block_sequence_new = block_sequence.slice(1);
 
       // Collect all blocks
