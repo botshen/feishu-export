@@ -1,5 +1,6 @@
 import { createProgressDisplay } from "../process-bar/bar-display";
 import { collectAllBlocks, setZoom } from "./pdf-util";
+import { printTOC } from "./toc-tree";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 /**
@@ -80,6 +81,9 @@ export async function exportToPDF(): Promise<void> {
     }
 
     console.log('找到 TOC 元素');
+    // 打印目录树
+    await printTOC();
+
     // 获取所有的 div 元素
     const divs = tocElement.querySelectorAll('div[role="item"]');
     // 过滤出不包含 button 的 div
