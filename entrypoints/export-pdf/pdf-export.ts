@@ -1,20 +1,20 @@
 import { createProgressDisplay } from "../process-bar/bar-display";
-import { collectAllBlocks, setZoom } from "./pdf-util";
+import { collectAllBlocks } from "./pdf-util";
 import { printTOC } from "./toc-tree";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
+// @ts-ignore
+import JSZip from "jszip";
+
 /**
- * 导出单个页面为PDF，直接下载
+ * 导出单个页面为PDF，返回PDF数据
  */
-async function exportSinglePageToPDF(title?: string): Promise<void> {
+async function exportSinglePageToPDF(title?: string): Promise<{ fileName: string; data: Uint8Array }> {
   try {
-
-
     // Collect all blocks
     const completeElement = await collectAllBlocks();
     if (!completeElement) {
-      console.error('Failed to find container element');
-      return;
+      throw new Error('Failed to find container element');
     }
 
     console.log('收集完成，准备导出 PDF');
@@ -33,8 +33,8 @@ async function exportSinglePageToPDF(title?: string): Promise<void> {
 
     console.log(`使用文件名: ${fileName}`);
 
-    // Export to PDF with collected content
-    await html2pdf()
+    // Export to PDF with collected content and get blob data
+    const pdfBlob = await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
         filename: fileName,
@@ -64,22 +64,23 @@ async function exportSinglePageToPDF(title?: string): Promise<void> {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       })
       .from(completeElement)
-      .save();
+      .output('arraybuffer');
 
-    console.log(`页面 PDF 已生成并下载: ${title}`);
+    console.log(`页面 PDF 已生成: ${title}`);
 
+    return {
+      fileName,
+      data: new Uint8Array(pdfBlob)
+    };
 
   } catch (error) {
     console.error('PDF 生成过程中出错:', error);
-
     throw error;
   }
 }
 
-
-
 /**
- * 按照目录顺序批量导出PDF
+ * 按照目录顺序批量导出PDF并打包成zip
  */
 export async function exportToPDF(): Promise<void> {
   console.log('开始按目录顺序批量导出PDF');
@@ -90,7 +91,8 @@ export async function exportToPDF(): Promise<void> {
     if (!tocElement) {
       console.log('未找到TOC元素，将只导出当前页面');
       // 单页导出才需要处理缩放
-      await exportSinglePageToPDF(undefined);
+      const pdfData = await exportSinglePageToPDF(undefined);
+      downloadPDF(pdfData.data, pdfData.fileName);
       return;
     }
 
@@ -134,7 +136,8 @@ export async function exportToPDF(): Promise<void> {
       // 创建进度显示
       const progress = createProgressDisplay();
 
-
+      // 创建一个新的 JSZip 实例
+      const zip = new JSZip();
 
       // 按顺序处理每个按钮，从第一个开始
       for (let i = 0; i < buttonsWithText.length; i++) {
@@ -163,11 +166,12 @@ export async function exportToPDF(): Promise<void> {
           const safeTitle = button.text.replace(/[\\/:*?"<>|]/g, '_');
           const fileName = `${i + 1}_${safeTitle}`;
 
-          // 直接导出并下载当前页面为PDF，不处理缩放
-          await exportSinglePageToPDF(fileName);
+          // 导出当前页面为PDF并添加到zip
+          const pdfData = await exportSinglePageToPDF(fileName);
+          zip.file(pdfData.fileName, pdfData.data);
 
           // 更新状态
-          progress.updateProgress(i + 1, buttonsWithText.length, button.text, 'PDF已保存');
+          progress.updateProgress(i + 1, buttonsWithText.length, button.text, 'PDF已添加到压缩包');
 
           // 等待PDF处理完成
           await new Promise(resolve => setTimeout(resolve, 1000));
@@ -178,10 +182,24 @@ export async function exportToPDF(): Promise<void> {
         }
       }
 
-      // 完成所有导出后才恢复缩放
-      await setZoom(1.0);
+
       // 更新进度显示的缩放
       progress.updateScaling(1.0);
+
+      // 生成zip文件
+      progress.updateProgress(buttonsWithText.length, buttonsWithText.length, '', '正在生成压缩包...');
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const zipFileName = `${safeDocTitle}_all.zip`;
+
+      // 下载zip文件
+      const url = URL.createObjectURL(zipBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = zipFileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
       // 完成所有导出后更新进度条
       progress.setComplete(buttonsWithText.length);
@@ -194,16 +212,27 @@ export async function exportToPDF(): Promise<void> {
       console.log('批量导出完成');
     } else {
       console.log('没有找到任何目录项，将只导出当前页面');
-      await exportSinglePageToPDF(undefined);
+      const pdfData = await exportSinglePageToPDF(undefined);
+      downloadPDF(pdfData.data, pdfData.fileName);
     }
   } catch (error) {
     console.error('批量导出过程中出错:', error);
     alert('导出过程中出错，请查看控制台获取详细信息');
-    // 确保在出错时也恢复缩放
-    try {
-      await setZoom(1.0);
-    } catch (e) {
-      console.error('恢复缩放失败:', e);
-    }
+
   }
+}
+
+/**
+ * 下载单个PDF文件
+ */
+function downloadPDF(data: Uint8Array, fileName: string) {
+  const blob = new Blob([data], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
