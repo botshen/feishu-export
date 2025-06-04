@@ -3,6 +3,7 @@ import { exportToPDF } from "./export-pdf/pdf-export";
 import html2pdf from "html2pdf.js";
 import { injectScriptToPage } from "../utils";
 import { collectAllBlocks } from "./export-pdf/pdf-util";
+import { exportToImg } from "./export-img/img-export";
 
 export default defineContentScript({
   matches: [
@@ -64,6 +65,11 @@ export default defineContentScript({
           })
           .from(completeElement)
           .save();
+        return true;
+      }
+      if (message.action === 'triggerExportImg') {
+        console.log('点击了导出图片');
+        await exportToImg();
         return true;
       }
       return false;

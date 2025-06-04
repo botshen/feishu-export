@@ -32,11 +32,15 @@ export default defineBackground(() => {
       contexts: ["all"],
       documentUrlPatterns: ["*://*.feishu.cn/*"]
     });
-
     // 创建截屏菜单项
     browser.contextMenus.create({
       id: "captureScreen",
       title: "导出当前文档为pdf（支持长文档）",
+      contexts: ["all"]
+    });
+    browser.contextMenus.create({
+      id: "exportImg",
+      title: "导出当前文档为图片",
       contexts: ["all"]
     });
   });
@@ -60,10 +64,21 @@ export default defineBackground(() => {
         console.log("点击了截屏");
         if (tab && tab.id) {
           try {
-            await browser.tabs.sendMessage(tab.id, { action: "triggerCaptureScreen", tab: tab });
+            await browser.tabs.sendMessage(tab.id, { action: "triggerCaptureScreen" });
             console.log("截屏消息已发送到标签页");
           } catch (error) {
             console.error("发送截屏消息失败:", error);
+          }
+        }
+        break;
+      case "exportImg":
+        console.log("点击了导出图片");
+        if (tab && tab.id) {
+          try {
+            await browser.tabs.sendMessage(tab.id, { action: "triggerExportImg" });
+            console.log("导出图片消息已发送到标签页");
+          } catch (error) {
+            console.error("发送导出图片消息失败:", error);
           }
         }
         break;
