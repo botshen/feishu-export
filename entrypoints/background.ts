@@ -1,48 +1,24 @@
 
 export default defineBackground(() => {
-
-  // 监听来自内容脚本的消息
-  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'setZoom') {
-      const tabId = sender.tab?.id;
-      const zoomFactor = message.zoomFactor;
-
-      if (tabId && typeof zoomFactor === 'number') {
-        browser.tabs.setZoom(tabId, zoomFactor)
-          .then(() => {
-            console.log(`已将标签页 ${tabId} 的缩放设置为 ${zoomFactor * 100}%`);
-            sendResponse({ success: true });
-          })
-          .catch((error) => {
-            console.error('设置缩放失败:', error);
-            sendResponse({ success: false, error: error.message });
-          });
-
-        return true; // 表示将异步发送响应
-      }
-    }
-
-    return false; // 没有异步响应
-  });
   browser.runtime.onInstalled.addListener(() => {
     // 创建一个分享菜单项
     browser.contextMenus.create({
       id: "exportPdf",
-      title: "批量导出pdf（不支持长文档）",
+      title: "批量导出pdf",
       contexts: ["all"],
       documentUrlPatterns: ["*://*.feishu.cn/*"]
     });
     // 创建截屏菜单项
     browser.contextMenus.create({
       id: "captureScreen",
-      title: "导出当前文档为pdf（支持长文档）",
+      title: "导出当前文档为pdf",
       contexts: ["all"]
     });
-    browser.contextMenus.create({
-      id: "exportImg",
-      title: "导出当前文档为图片",
-      contexts: ["all"]
-    });
+    // browser.contextMenus.create({
+    //   id: "exportImg",
+    //   title: "导出当前文档为图片",
+    //   contexts: ["all"]
+    // });
   });
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     switch (info.menuItemId) {
