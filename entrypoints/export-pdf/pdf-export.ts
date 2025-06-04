@@ -128,10 +128,10 @@ export async function exportToPDF(): Promise<void> {
     if (buttonsWithText.length > 0) {
       console.log(`找到 ${buttonsWithText.length} 个目录项，开始批量导出...`);
 
-      // 获取文档主标题
-      const docTitleElement = document.querySelector('.doc-title');
-      const docTitle = docTitleElement?.textContent?.trim() || 'feishu-doc';
-      const safeDocTitle = docTitle.replace(/[\\/:*?"<>|]/g, '_');
+      // 获取知识库/文件夹名称
+      const wikiTitle = document.querySelector('.wiki-title')?.textContent?.trim();
+      const folderTitle = document.querySelector('.folder-title')?.textContent?.trim();
+      const baseTitle = (wikiTitle || folderTitle || '飞书文档导出').replace(/[\\/:*?"<>|]/g, '_');
 
       // 创建进度显示
       const progress = createProgressDisplay();
@@ -189,7 +189,17 @@ export async function exportToPDF(): Promise<void> {
       // 生成zip文件
       progress.updateProgress(buttonsWithText.length, buttonsWithText.length, '', '正在生成压缩包...');
       const zipBlob = await zip.generateAsync({ type: 'blob' });
-      const zipFileName = `${safeDocTitle}_all.zip`;
+
+      // 生成时间戳，格式：YYYYMMDD_HHmmss
+      const now = new Date();
+      const timestamp = now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        String(now.getDate()).padStart(2, '0') + '_' +
+        String(now.getHours()).padStart(2, '0') +
+        String(now.getMinutes()).padStart(2, '0') +
+        String(now.getSeconds()).padStart(2, '0');
+
+      const zipFileName = `${baseTitle}_${timestamp}.zip`;
 
       // 下载zip文件
       const url = URL.createObjectURL(zipBlob);
