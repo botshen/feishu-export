@@ -29,7 +29,7 @@ export default defineBackground(() => {
     // 创建一个分享菜单项
     browser.contextMenus.create({
       id: "exportPdf",
-      title: "批量导出pdf",
+      title: "批量导出pdf（不支持长文档）",
       contexts: ["all"],
       documentUrlPatterns: ["*://*.feishu.cn/*"]
     });
@@ -37,7 +37,7 @@ export default defineBackground(() => {
     // 创建截屏菜单项
     browser.contextMenus.create({
       id: "captureScreen",
-      title: "截屏当前文档",
+      title: "导出当前文档为pdf（支持长文档）",
       contexts: ["all"]
     });
   });
@@ -61,7 +61,7 @@ export default defineBackground(() => {
         console.log("点击了截屏");
         if (tab && tab.id) {
           try {
-            await browser.tabs.sendMessage(tab.id, { action: "triggerCaptureScreen", tab: tab});
+            await browser.tabs.sendMessage(tab.id, { action: "triggerCaptureScreen", tab: tab });
             console.log("截屏消息已发送到标签页");
           } catch (error) {
             console.error("发送截屏消息失败:", error);
