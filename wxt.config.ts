@@ -7,13 +7,7 @@ export default defineConfig({
     disabled: true,
   },
   manifest: {
-    permissions: ['tabs', "contextMenus", 'activeTab', 'downloads'],
-    web_accessible_resources: [
-      {
-        resources: ['/injected.js'],
-        matches: ['<all_urls>'],
-      },
-    ],
+    permissions: ["contextMenus"],
   },
   autoIcons: {
     grayscaleOnDevelopment: false,

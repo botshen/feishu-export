@@ -4,79 +4,69 @@ import html2pdf from "html2pdf.js";
 import { injectScriptToPage } from "../utils";
 import { collectAllBlocks } from "./export-pdf/pdf-util";
 
-
-
 export default defineContentScript({
-  matches: ['<all_urls>'],
+  matches: [
+    "https://*.feishu.cn/*",
+    "https://*.feishu.net/*",
+    "https://*.larksuite.com/*",
+    "https://*.feishu-pre.net/*",
+    "https://*.larkoffice.com/*"
+  ],
   runAt: 'document_end',
   async main() {
     console.log('Content script loaded and running');
     injectScriptToPage()
     // 添加来自 background 的消息监听器
-    browser.runtime.onMessage.addListener((message) => {
+    browser.runtime.onMessage.addListener(async (message) => {
       if (message.action === 'triggerExportPdf') {
-        exportToPDF();
+        await exportToPDF();
         return true;
       }
       if (message.action === 'triggerCaptureScreen') {
+        // Collect all blocks
+        const completeElement = await collectAllBlocks();
+        if (!completeElement) {
+          console.error('Failed to find container element');
+          return;
+        }
 
-        window.dispatchEvent(new CustomEvent('message-to-injected', {
-          detail: {
-            action: 'getWindow',
-            id: message.id
-          }
-        }));
+        console.log('收集完成，准备导出 PDF');
+
+        // Export to PDF with collected content
+        await html2pdf()
+          .set({
+            margin: [10, 10, 10, 10],
+            filename: `xxx.pdf`,
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: {
+              scale: 4,
+              useCORS: true,
+              allowTaint: true,
+              logging: true,
+              imageTimeout: 0,
+              onclone: (clonedDoc: Document) => {
+                return new Promise(resolve => {
+                  setTimeout(() => {
+                    const images = clonedDoc.getElementsByTagName('img');
+                    const imagePromises = Array.from(images).map((img: HTMLImageElement) => {
+                      if (img.complete) return Promise.resolve();
+                      return new Promise(imgResolve => {
+                        img.onload = imgResolve;
+                        img.onerror = imgResolve;
+                      });
+                    });
+                    Promise.all(imagePromises).then(resolve);
+                  }, 1000);
+                });
+              }
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          })
+          .from(completeElement)
+          .save();
         return true;
       }
       return false;
     });
-    window.addEventListener('message-to-content', (async (event: Event) => {
-      const customEvent = event as CustomEvent;
-      const block_sequence = customEvent.detail.data.window.block_sequence;
-      const block_sequence_new = block_sequence.slice(1);
-
-      // Collect all blocks
-      const completeElement = await collectAllBlocks();
-      if (!completeElement) {
-        console.error('Failed to find container element');
-        return;
-      }
-
-      console.log('收集完成，准备导出 PDF');
-
-      // Export to PDF with collected content
-      await html2pdf()
-        .set({
-          margin: [10, 10, 10, 10],
-          filename: `xxx.pdf`,
-          image: { type: 'jpeg', quality: 1 },
-          html2canvas: {
-            scale: 4,
-            useCORS: true,
-            allowTaint: true,
-            logging: true,
-            imageTimeout: 0,
-            onclone: (clonedDoc: Document) => {
-              return new Promise(resolve => {
-                setTimeout(() => {
-                  const images = clonedDoc.getElementsByTagName('img');
-                  const imagePromises = Array.from(images).map((img: HTMLImageElement) => {
-                    if (img.complete) return Promise.resolve();
-                    return new Promise(imgResolve => {
-                      img.onload = imgResolve;
-                      img.onerror = imgResolve;
-                    });
-                  });
-                  Promise.all(imagePromises).then(resolve);
-                }, 1000);
-              });
-            }
-          },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        })
-        .from(completeElement)
-        .save();
-    }) as EventListener);
-
   },
 });
