@@ -17,11 +17,25 @@ export async function setZoom(zoomFactor: number): Promise<void> {
 }
 
 export async function collectAllBlocks() {
+  const rootBlock = document.querySelector('.root-block') as HTMLElement;
+  if (!rootBlock) return null;
+
+  // 克隆整个 root-block
+  const clonedRoot = rootBlock.cloneNode(true) as HTMLElement;
+
+  // 找到或创建 render-unit-wrapper
+  let renderUnitWrapper = clonedRoot.querySelector('.render-unit-wrapper');
+  if (!renderUnitWrapper) {
+    renderUnitWrapper = document.createElement('div');
+    renderUnitWrapper.className = 'render-unit-wrapper';
+    clonedRoot.appendChild(renderUnitWrapper);
+  } else {
+    // 清空现有的 render-unit-wrapper 内容
+    renderUnitWrapper.innerHTML = '';
+  }
+
   const container = document.querySelector('.bear-web-x-container.docx-in-wiki') as HTMLElement;
   if (!container) return null;
-
-  const tempContainer = document.createElement('div');
-  tempContainer.className = 'render-unit-wrapper';
 
   const FIXED_HEADER_HEIGHT = 65;
   const viewportHeight = container.clientHeight - FIXED_HEADER_HEIGHT;
@@ -69,11 +83,12 @@ export async function collectAllBlocks() {
   await new Promise(resolve => setTimeout(resolve, 150));
   collectVisibleBlocks();
 
-  // 直接返回收集的数据，不再滚动回顶部
-  return Array.from(collectedBlocks.entries())
+  // 将收集到的块添加到 render-unit-wrapper 中
+  Array.from(collectedBlocks.entries())
     .sort(([idA], [idB]) => idA - idB)
-    .reduce((container, [_, element]) => {
-      container.appendChild(element);
-      return container;
-    }, tempContainer);
+    .forEach(([_, element]) => {
+      renderUnitWrapper!.appendChild(element);
+    });
+
+  return clonedRoot;
 }
