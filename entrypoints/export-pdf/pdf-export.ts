@@ -131,6 +131,9 @@ export async function exportToPDF(): Promise<void> {
 
         console.log(`处理第 ${i + 1}/${buttonsWithText.length} 个目录项，文本：${button.text}`);
 
+        // 点击按钮前，确保所有菜单都是展开的
+        await printTOC();
+
         // 点击按钮，切换到对应内容
         (button.button as HTMLElement).click();
 
