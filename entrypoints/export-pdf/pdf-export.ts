@@ -1,65 +1,62 @@
 import { createProgressDisplay } from "../process-bar/bar-display";
-import { setZoom } from "./pdf-util";
+import { collectAllBlocks, setZoom } from "./pdf-util";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 /**
  * 导出单个页面为PDF，直接下载
  */
-async function exportSinglePageToPDF(title?: string, applyZoom: boolean = false, restoreZoom: boolean = false): Promise<void> {
+async function exportSinglePageToPDF(title?: string): Promise<void> {
   try {
-    // 仅在需要时设置页面缩放
-    if (applyZoom) {
-      await setZoom(0.01); // 设置页面缩放为 0.01 (1%)
-      await new Promise(resolve => setTimeout(resolve, 2000)); // 等待缩放效果应用
+
+
+    // Collect all blocks
+    const completeElement = await collectAllBlocks();
+    if (!completeElement) {
+      console.error('Failed to find container element');
+      return;
     }
 
-    // 获取目标元素
-    const element = document.querySelector('.root-block');
-    console.log('找到目标元素:', element);
+    console.log('收集完成，准备导出 PDF');
 
-    if (!element) {
-      console.error('找不到目标元素 .root-block');
-      // 如果找不到元素也要恢复缩放
-      if (restoreZoom) await setZoom(1.0);
-      throw new Error('找不到目标元素');
-    }
-
-    // 获取文档标题作为文件名
-    const titleElement = document.querySelector('.doc-title');
-    const pageTitle = title || titleElement?.textContent?.trim() || 'feishu-doc';
-    console.log(`正在生成页面: ${pageTitle}`);
-
-    // 直接下载PDF
+    // Export to PDF with collected content
     await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
-        filename: `${pageTitle}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
+        filename: `xxx.pdf`,
+        image: { type: 'jpeg', quality: 1 },
         html2canvas: {
-          scale: 2,
+          scale: 4,
           useCORS: true,
           allowTaint: true,
-          logging: true
+          logging: true,
+          imageTimeout: 0,
+          onclone: (clonedDoc: Document) => {
+            return new Promise(resolve => {
+              setTimeout(() => {
+                const images = clonedDoc.getElementsByTagName('img');
+                const imagePromises = Array.from(images).map((img: HTMLImageElement) => {
+                  if (img.complete) return Promise.resolve();
+                  return new Promise(imgResolve => {
+                    img.onload = imgResolve;
+                    img.onerror = imgResolve;
+                  });
+                });
+                Promise.all(imagePromises).then(resolve);
+              }, 1000);
+            });
+          }
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       })
-      .from(element)
+      .from(completeElement)
       .save();
 
-    console.log(`页面 PDF 已生成并下载: ${pageTitle}`);
+    console.log(`页面 PDF 已生成并下载: ${title}`);
 
-    // PDF生成完成后，仅在需要时恢复原始缩放
-    if (restoreZoom) await setZoom(1.0);
+
   } catch (error) {
     console.error('PDF 生成过程中出错:', error);
-    // 出错时也要尝试恢复缩放
-    if (restoreZoom) {
-      try {
-        await setZoom(1.0);
-      } catch (e) {
-        console.error('恢复缩放失败:', e);
-      }
-    }
+
     throw error;
   }
 }
@@ -78,7 +75,7 @@ export async function exportToPDF(): Promise<void> {
     if (!tocElement) {
       console.log('未找到TOC元素，将只导出当前页面');
       // 单页导出才需要处理缩放
-      await exportSinglePageToPDF(undefined, true, true);
+      await exportSinglePageToPDF(undefined);
       return;
     }
 
@@ -119,13 +116,7 @@ export async function exportToPDF(): Promise<void> {
       // 创建进度显示
       const progress = createProgressDisplay();
 
-      // 先放大进度显示
-      progress.updateScaling(0.01);
 
-      // 然后设置页面缩放为0.01
-      await setZoom(0.01);
-      // 等待2秒确保缩放效果完全应用
-      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // 按顺序处理每个按钮，从第一个开始
       for (let i = 0; i < buttonsWithText.length; i++) {
@@ -182,7 +173,7 @@ export async function exportToPDF(): Promise<void> {
       console.log('批量导出完成');
     } else {
       console.log('没有找到任何目录项，将只导出当前页面');
-      await exportSinglePageToPDF(undefined, true, true);
+      await exportSinglePageToPDF(undefined);
     }
   } catch (error) {
     console.error('批量导出过程中出错:', error);
