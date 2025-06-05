@@ -1,5 +1,3 @@
-
-
 /**
  * 将块中的 canvas 元素转换为图片
  */
@@ -103,7 +101,7 @@ export async function collectAllBlocks() {
     renderUnitWrapper.innerHTML = '';
   }
 
-  const container = document.querySelector('.bear-web-x-container.docx-in-wiki') as HTMLElement;
+  const container = document.querySelector('.bear-web-x-container') as HTMLElement;
   if (!container) return null;
 
   const collectedBlocks = new Map<number, HTMLElement>();
@@ -213,8 +211,24 @@ export async function collectAllBlocks() {
           clearInterval(scrollInterval);
           observer.disconnect();
 
-          // 最后再收集一次，确保不遗漏
-          collectVisibleBlocks();
+          // 等待一段时间确保内容完全加载
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // 获取当前可见的所有块
+          const visibleBlocks = document.querySelectorAll('.render-unit-wrapper > div[data-block-id]');
+          console.log(`找到 ${visibleBlocks.length} 个可见块，准备刷新它们的内容`);
+
+          // 重新获取所有可见块的内容
+          for (const block of Array.from(visibleBlocks)) {
+            const blockId = parseInt(block.getAttribute('data-block-id') || '0');
+            if (blockId >= 2) { // 保持原有的 blockId >= 2 的判断
+              const currentBlock = block as HTMLElement;
+              // 处理块中的 canvas
+              await processBlockCanvas(currentBlock);
+              // 更新 Map 中的内容
+              collectedBlocks.set(blockId, currentBlock.cloneNode(true) as HTMLElement);
+            }
+          }
 
           // 将收集到的块按顺序添加到克隆的 wrapper 中
           Array.from(collectedBlocks.entries())
