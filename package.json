@@ -2,7 +2,7 @@
   "name": "飞书批量导出",
   "description": "强大的飞书批量pdf导出工具",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "scripts": {
     "dev": "wxt",
