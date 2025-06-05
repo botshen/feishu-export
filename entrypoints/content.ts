@@ -48,21 +48,6 @@ export default defineContentScript({
               allowTaint: true,
               logging: true,
               imageTimeout: 0,
-              onclone: (clonedDoc: Document) => {
-                return new Promise(resolve => {
-                  setTimeout(() => {
-                    const images = clonedDoc.getElementsByTagName('img');
-                    const imagePromises = Array.from(images).map((img: HTMLImageElement) => {
-                      if (img.complete) return Promise.resolve();
-                      return new Promise(imgResolve => {
-                        img.onload = imgResolve;
-                        img.onerror = imgResolve;
-                      });
-                    });
-                    Promise.all(imagePromises).then(resolve);
-                  }, 1000);
-                });
-              }
             },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
           })
