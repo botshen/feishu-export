@@ -9,6 +9,12 @@ export default defineConfig({
   },
   manifest: {
     permissions: ["contextMenus"],
+    web_accessible_resources: [
+      {
+        resources: ['/injected.js'],
+        matches: ['<all_urls>'],
+      },
+    ],
   },
   autoIcons: {
     grayscaleOnDevelopment: false,

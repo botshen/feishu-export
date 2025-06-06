@@ -14,11 +14,11 @@ export default defineBackground(() => {
       title: "导出当前文档为pdf",
       contexts: ["all"]
     });
-    // browser.contextMenus.create({
-    //   id: "exportImg",
-    //   title: "导出当前文档为图片",
-    //   contexts: ["all"]
-    // });
+    browser.contextMenus.create({
+      id: "exportImg",
+      title: "test",
+      contexts: ["all"]
+    });
   });
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     switch (info.menuItemId) {

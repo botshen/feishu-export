@@ -2,7 +2,7 @@ import { exportToPDF } from "./export-pdf/pdf-export";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { collectAllBlocks } from "./export-pdf/pdf-util";
-import { exportToImg } from "./export-img/img-export";
+import { test } from "./test/test";
 
 export default defineContentScript({
   matches: [
@@ -14,6 +14,9 @@ export default defineContentScript({
   ],
   runAt: 'document_end',
   async main() {
+    await injectScript('/injected.js', {
+      keepInDom: true
+    })
     browser.runtime.onMessage.addListener(async (message) => {
       if (message.action === 'triggerExportPdf') {
         await exportToPDF();
@@ -57,7 +60,8 @@ export default defineContentScript({
       }
       if (message.action === 'triggerExportImg') {
         console.log('点击了导出图片');
-        await exportToImg();
+        // await exportToImg();
+        test()
         return true;
       }
       return false;
