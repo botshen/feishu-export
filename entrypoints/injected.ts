@@ -137,9 +137,13 @@ export default defineUnlistedScript(() => {
     // 生成PDF
     await html2pdf()
       .set({
-        margin: [10, 10, 10, 10],
+        margin: [15, 15, 15, 15],
         filename: `${recommendName}.pdf`,
         image: { type: 'jpeg', quality: 1 },
+        pagebreak: { 
+          mode: 'avoid-all',
+          avoid: ['*'] // 避免所有元素被分割
+        },
         html2canvas: {
           scale: 4,
           useCORS: true,
