@@ -2,9 +2,11 @@ import { Docx, docx } from "@/pkg/lark/docx";
 import { websiteMessenger } from "./message/website-messaging";
 import { Toast } from "@/pkg/lark/env";
 import { generatePublicUrl, makePublicUrlEffective } from "@/pkg/lark/image";
-import { isDefined } from "@/pkg/common";
+import { isDefined, OneHundred } from "@/pkg/common";
 import { confirm } from "@/pkg/utils/notification";
 import { markdownAstToHtml } from "@/pkg/utils/markdown-to-html";
+import normalizeFileName from 'filenamify/browser'
+
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 
@@ -94,7 +96,9 @@ export default defineUnlistedScript(() => {
     }
 
     const { root, images } = docx.intoMarkdownAST()
-
+    const recommendName = docx.pageTitle
+      ? normalizeFileName(docx.pageTitle.slice(0, OneHundred))
+      : 'doc'
     // 处理图片URL和token
     const tokens = images
       .map(image => {
@@ -134,7 +138,7 @@ export default defineUnlistedScript(() => {
     await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
-        filename: `xxx.pdf`,
+        filename: `${recommendName}.pdf`,
         image: { type: 'jpeg', quality: 1 },
         html2canvas: {
           scale: 4,
