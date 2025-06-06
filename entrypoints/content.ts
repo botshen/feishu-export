@@ -58,8 +58,8 @@ export default defineContentScript({
           .save();
         return true;
       }
-      if (message.action === 'triggerExportImg') {
-        websiteMessenger.sendMessage("triggerExportImg", { 1: 1 });
+      if (message.action === 'triggerExportMarkdown') {
+        websiteMessenger.sendMessage("triggerExportMarkdown", { 1: 1 });
         return true;
       }
       return false;

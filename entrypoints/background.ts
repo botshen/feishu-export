@@ -15,7 +15,7 @@ export default defineBackground(() => {
       contexts: ["all"]
     });
     browser.contextMenus.create({
-      id: "exportImg",
+      id: "triggerExportMarkdown",
       title: "test",
       contexts: ["all"]
     });
@@ -47,11 +47,11 @@ export default defineBackground(() => {
           }
         }
         break;
-      case "exportImg":
+      case "triggerExportMarkdown":
         console.log("点击了导出图片");
         if (tab && tab.id) {
           try {
-            await browser.tabs.sendMessage(tab.id, { action: "triggerExportImg" });
+            await browser.tabs.sendMessage(tab.id, { action: "triggerExportMarkdown" });
             console.log("导出图片消息已发送到标签页");
           } catch (error) {
             console.error("发送导出图片消息失败:", error);
