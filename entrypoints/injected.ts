@@ -5,85 +5,84 @@ import { generatePublicUrl, makePublicUrlEffective } from "@/pkg/lark/image";
 import { isDefined } from "@/pkg/common";
 import { confirm } from "@/pkg/utils/notification";
 import { markdownAstToHtml } from "@/pkg/utils/markdown-to-html";
-import { snapdom } from "@zumer/snapdom";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 
 export default defineUnlistedScript(() => {
 
-  websiteMessenger.onMessage('triggerExportMarkdown', async (data) => {
-    // @ts-ignore
-    console.error('window', window.PageMain)
-    // eventually, send data back to the content script
-    console.error(docx, 222);
+  // websiteMessenger.onMessage('triggerExportMarkdown', async (data) => {
+  //   // @ts-ignore
+  //   console.error('window', window.PageMain)
+  //   // eventually, send data back to the content script
+  //   console.error(docx, 222);
 
-    if (!docx.rootBlock) {
-      Toast.warning({ content: 'not support' })
+  //   if (!docx.rootBlock) {
+  //     Toast.warning({ content: 'not support' })
 
-      return
-    }
-    console.error(docx.isReady(), 333);
-    if (!docx.isReady()) {
-      Toast.warning({
-        content: 'content loading',
-      })
+  //     return
+  //   }
+  //   console.error(docx.isReady(), 333);
+  //   if (!docx.isReady()) {
+  //     Toast.warning({
+  //       content: 'content loading',
+  //     })
 
-      return
-    }
+  //     return
+  //   }
 
-    const { root, images } = docx.intoMarkdownAST()
-    console.error(root, 444);
-    const tokens = images
-      .map(image => {
-        if (!image.data?.token) return null
+  //   const { root, images } = docx.intoMarkdownAST()
+  //   console.error(root, 444);
+  //   const tokens = images
+  //     .map(image => {
+  //       if (!image.data?.token) return null
 
-        const { token } = image.data
-        const publicUrl = generatePublicUrl(token)
-        const code = new URL(publicUrl).searchParams.get('code')
-        if (!code) return null
+  //       const { token } = image.data
+  //       const publicUrl = generatePublicUrl(token)
+  //       const code = new URL(publicUrl).searchParams.get('code')
+  //       if (!code) return null
 
-        image.url = publicUrl
+  //       image.url = publicUrl
 
-        return [token, code]
-      })
-      .filter(isDefined)
+  //       return [token, code]
+  //     })
+  //     .filter(isDefined)
 
-    const markdown = Docx.stringify(root)
-    console.error(markdown, 555);
-    if (!window.document.hasFocus()) {
-      const confirmed = await confirm()
-      if (!confirmed) {
-        return
-      }
-    }
+  //   const markdown = Docx.stringify(root)
+  //   console.error(markdown, 555);
+  //   if (!window.document.hasFocus()) {
+  //     const confirmed = await confirm()
+  //     if (!confirmed) {
+  //       return
+  //     }
+  //   }
 
-    // clipboard.write() method may be intercepted and overridden by websites
-    const writeToClipboard = (
-      Object.getPrototypeOf(window.navigator.clipboard) as Clipboard
-    ).write.bind(window.navigator.clipboard)
+  //   // clipboard.write() method may be intercepted and overridden by websites
+  //   const writeToClipboard = (
+  //     Object.getPrototypeOf(window.navigator.clipboard) as Clipboard
+  //   ).write.bind(window.navigator.clipboard)
 
-    await writeToClipboard([
-      new ClipboardItem({
-        'text/plain': new Blob([markdown], { type: 'text/plain' }),
-      }),
-    ])
+  //   await writeToClipboard([
+  //     new ClipboardItem({
+  //       'text/plain': new Blob([markdown], { type: 'text/plain' }),
+  //     }),
+  //   ])
 
-    if (tokens.length > 0) {
-      const isSuccess = await makePublicUrlEffective(
-        Object.fromEntries(tokens) as Record<string, string>,
-      )
-      if (!isSuccess) {
-        Toast.error({
-          content: 'failed to copy images',
-        })
-      }
-    }
-  });
+  //   if (tokens.length > 0) {
+  //     const isSuccess = await makePublicUrlEffective(
+  //       Object.fromEntries(tokens) as Record<string, string>,
+  //     )
+  //     if (!isSuccess) {
+  //       Toast.error({
+  //         content: 'failed to copy images',
+  //       })
+  //     }
+  //   }
+  // });
 
   // 添加导出HTML的消息处理函数
-  websiteMessenger.onMessage('triggerExportHtml', async (data) => {
+  websiteMessenger.onMessage('exportPdf', async (data) => {
     if (!docx.rootBlock) {
-      Toast.warning({ content: 'not support' })
+      Toast.warning({ content: '请刷新' })
       return
     }
 

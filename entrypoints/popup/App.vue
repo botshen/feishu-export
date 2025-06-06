@@ -54,8 +54,8 @@ const handleExportMarkdown = async () => {
     console.error("发送消息到标签页失败:", error);
   }
 };
-const handleExportHtml = async () => {
-  console.log("导出当前文档为HTML");
+const handleExportFdf = async () => {
+  console.log("导出当前文档为Fdf");
   try {
     const [tab] = await browser.tabs.query({
       active: true,
@@ -63,9 +63,9 @@ const handleExportHtml = async () => {
     });
     if (tab && tab.id) {
       await browser.tabs.sendMessage(tab.id, {
-        action: "triggerExportHtml",
+        action: "exportPdf",
       });
-      console.log("已发送导出当前文档HTML消息到标签页");
+      console.log("已发送导出当前文档Fdf消息到标签页");
     } else {
       console.error("无法获取当前标签页信息");
     }
@@ -76,14 +76,12 @@ const handleExportHtml = async () => {
 </script>
 
 <template>
-  <div
-    class="w-[300px] p-4 bg-gradient-to-br from-gray-50 to-gray-100 min-h-[200px]"
-  >
+  <div class="w-[300px] p-4 bg-gradient-to-br from-gray-50 to-gray-100">
     <h1 class="text-xl font-bold text-gray-800 mb-4 text-center">
       超级强大的飞书导出神器
     </h1>
     <div class="flex flex-col gap-3">
-      <button
+      <!-- <button
         @click="handleExportPdf"
         class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
       >
@@ -136,12 +134,12 @@ const handleExportHtml = async () => {
           />
         </svg>
         导出当前文档为Markdown
-      </button>
+      </button> -->
       <button
-        @click="handleExportHtml"
+        @click="handleExportFdf"
         class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
       >
-        导出当前文档为HTML
+        导出当前文档为Fdf
       </button>
     </div>
     <div class="mt-4 text-center text-xs text-gray-500">

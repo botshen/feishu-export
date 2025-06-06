@@ -18,52 +18,49 @@ export default defineContentScript({
       keepInDom: true
     })
     browser.runtime.onMessage.addListener(async (message) => {
-      if (message.action === 'triggerExportPdf') {
-        await exportToPDF();
-        return true;
-      }
-      if (message.action === 'triggerCaptureScreen') {
-        // Collect all blocks
-        const completeElement = await collectAllBlocks();
-        if (!completeElement) {
-          console.error('Failed to find container element');
-          return;
-        }
+      // if (message.action === 'triggerExportPdf') {
+      //   await exportToPDF();
+      //   return true;
+      // }
+      // if (message.action === 'triggerCaptureScreen') {
+      //   // Collect all blocks
+      //   const completeElement = await collectAllBlocks();
+      //   if (!completeElement) {
+      //     console.error('Failed to find container element');
+      //     return;
+      //   }
 
-        console.log('收集完成，准备导出 PDF');
+      //   console.log('收集完成，准备导出 PDF');
 
-        // 获取文档标题
-        const docTitleElement = document.querySelector('.doc-title');
-        const docTitle = docTitleElement?.textContent?.trim() || 'feishu-doc';
-        const safeDocTitle = docTitle.replace(/[\\/:*?"<>|]/g, '_');
+      //   // 获取文档标题
+      //   const docTitleElement = document.querySelector('.doc-title');
+      //   const docTitle = docTitleElement?.textContent?.trim() || 'feishu-doc';
+      //   const safeDocTitle = docTitle.replace(/[\\/:*?"<>|]/g, '_');
 
-        console.log(`使用文档标题: ${safeDocTitle}`);
+      //   console.log(`使用文档标题: ${safeDocTitle}`);
 
-        // Export to PDF with collected content
-        await html2pdf()
-          .set({
-            margin: [10, 10, 10, 10],
-            filename: `${safeDocTitle}.pdf`,
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: {
-              scale: 4,
-              useCORS: true,
-              allowTaint: true,
-              logging: true,
-              imageTimeout: 0,
-            },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-          })
-          .from(completeElement)
-          .save();
-        return true;
-      }
-      if (message.action === 'triggerExportMarkdown') {
-        websiteMessenger.sendMessage("triggerExportMarkdown", { 1: 1 });
-        return true;
-      }
-      if (message.action === 'triggerExportHtml') {
-        websiteMessenger.sendMessage("triggerExportHtml", { 1: 1 });
+      //   // Export to PDF with collected content
+      //   await html2pdf()
+      //     .set({
+      //       margin: [10, 10, 10, 10],
+      //       filename: `${safeDocTitle}.pdf`,
+      //       image: { type: 'jpeg', quality: 1 },
+      //       html2canvas: {
+      //         scale: 4,
+      //         useCORS: true,
+      //         allowTaint: true,
+      //         logging: true,
+      //         imageTimeout: 0,
+      //       },
+      //       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      //     })
+      //     .from(completeElement)
+      //     .save();
+      //   return true;
+      // }
+
+      if (message.action === 'exportPdf') {
+        websiteMessenger.sendMessage("exportPdf", { 1: 1 });
         return true;
       }
       return false;
