@@ -134,6 +134,8 @@ export function markdownAstToHtml(ast: mdast.Root | MarkdownNode): string {
       </h6>`;
 
     default:
-      return '';
+      return `<span style="margin: 1.5em 0 0.5em; font-size: 0.85em; font-weight: 600; color: #1a202c;">
+      ${(ast.children as MarkdownNode[])?.map(markdownAstToHtml).join('') || ''}
+    </span>`;
   }
 } 
