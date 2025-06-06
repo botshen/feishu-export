@@ -145,7 +145,7 @@ export default defineUnlistedScript(() => {
           avoid: ['*'] // 避免所有元素被分割
         },
         html2canvas: {
-          scale: 4,
+          scale: 2,
           useCORS: true,
           allowTaint: true,
           logging: true,
