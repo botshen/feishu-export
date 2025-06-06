@@ -9,6 +9,13 @@ export default defineConfig({
   },
   manifest: {
     permissions: ["contextMenus"],
+    host_permissions: [
+      "https://*.feishu.cn/*",
+      "https://*.feishu.net/*",
+      "https://*.larksuite.com/*",
+      "https://*.feishu-pre.net/*",
+      "https://*.larkoffice.com/*"
+    ],
     web_accessible_resources: [
       {
         resources: ['/injected.js'],

@@ -12,8 +12,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       '@zumer/snapdom':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.2.2
+        version: 1.2.2
       html2pdf.js:
         specifier: ^0.10.3
         version: 0.10.3
@@ -791,8 +791,8 @@ packages:
   '@wxt-dev/storage@1.1.1':
     resolution: {integrity: sha512-H1vYWeoWz03INV4r+sLYDFil88b3rgMMfgGp/EXy3bLbveJeiMiFs/G0bsBN2Ra87Iqlf2oVYRb/ABQpAugbew==}
 
-  '@zumer/snapdom@1.2.1':
-    resolution: {integrity: sha512-JaThk7ycOdHPh58B51NvcP1j1o9SKq8f3gNv5T0gUeJJ/T07nGwnuKHwZ/R9yRoAz3YI1GwzZd80W1kjQWrLBg==}
+  '@zumer/snapdom@1.2.2':
+    resolution: {integrity: sha512-LvxcvY344tl44sMmw0Wk5/5kB9YpVeBJDcu2E7+vMTnBTSTcTEIkbyZ2ZizFPHisJgzsaLgh7Nst8Wls0mksnA==}
 
   acorn@8.14.1:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
@@ -3224,7 +3224,7 @@ snapshots:
       async-mutex: 0.5.0
       dequal: 2.0.3
 
-  '@zumer/snapdom@1.2.1': {}
+  '@zumer/snapdom@1.2.2': {}
 
   acorn@8.14.1: {}
 

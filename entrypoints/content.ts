@@ -62,6 +62,10 @@ export default defineContentScript({
         websiteMessenger.sendMessage("triggerExportMarkdown", { 1: 1 });
         return true;
       }
+      if (message.action === 'triggerExportHtml') {
+        websiteMessenger.sendMessage("triggerExportHtml", { 1: 1 });
+        return true;
+      }
       return false;
     });
   },
