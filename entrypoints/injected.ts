@@ -96,23 +96,7 @@ export default defineUnlistedScript(() => {
 
     const { root, images } = docx.intoMarkdownAST()
 
-    // 处理图片URL
-    images.forEach(image => {
-      if (!image.data?.token) return
-
-      const { token } = image.data
-      const publicUrl = generatePublicUrl(token)
-      image.url = publicUrl
-    })
-
-    // 转换为HTML
-    const html = markdownAstToHtml(root)
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    console.error('html', html)
-
-    // 处理图片token
+    // 处理图片URL和token
     const tokens = images
       .map(image => {
         if (!image.data?.token) return null
@@ -120,10 +104,14 @@ export default defineUnlistedScript(() => {
         const publicUrl = generatePublicUrl(token)
         const code = new URL(publicUrl).searchParams.get('code')
         if (!code) return null
+
+        // 设置图片URL
+        image.url = publicUrl
         return [token, code]
       })
       .filter(isDefined)
 
+    // 先确保所有图片URL生效
     if (tokens.length > 0) {
       const isSuccess = await makePublicUrlEffective(
         Object.fromEntries(tokens) as Record<string, string>,
@@ -132,15 +120,25 @@ export default defineUnlistedScript(() => {
         Toast.error({
           content: 'failed to make images public',
         })
+        return
       }
     }
+
+    // 转换为HTML
+    const html = markdownAstToHtml(root)
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    console.error('html', html)
+
+    // 生成PDF
     await html2pdf()
       .set({
         margin: [10, 10, 10, 10],
         filename: `xxx.pdf`,
         image: { type: 'jpeg', quality: 1 },
         html2canvas: {
-          scale: 2,
+          scale: 4,
           useCORS: true,
           allowTaint: true,
           logging: true,
