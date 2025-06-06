@@ -2,7 +2,7 @@ import { exportToPDF } from "./export-pdf/pdf-export";
 // @ts-ignore
 import html2pdf from "html2pdf.js";
 import { collectAllBlocks } from "./export-pdf/pdf-util";
-import { test } from "./test/test";
+import { websiteMessenger } from "./message/website-messaging";
 
 export default defineContentScript({
   matches: [
@@ -59,9 +59,7 @@ export default defineContentScript({
         return true;
       }
       if (message.action === 'triggerExportImg') {
-        console.log('点击了导出图片');
-        // await exportToImg();
-        test()
+        websiteMessenger.sendMessage("triggerExportImg", { 1: 1 });
         return true;
       }
       return false;

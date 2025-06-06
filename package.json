@@ -15,15 +15,16 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@webext-core/messaging": "^2.2.0",
     "@zumer/snapdom": "^1.2.1",
     "html2pdf.js": "^0.10.3",
     "jszip": "^3.10.1",
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
     "@wxt-dev/auto-icons": "^1.0.2",
     "@wxt-dev/module-vue": "^1.0.2",
-    "@tailwindcss/vite": "^4.0.6",
     "tailwindcss": "^4.0.6",
     "typescript": "5.6.3",
     "vue-tsc": "^2.2.10",
