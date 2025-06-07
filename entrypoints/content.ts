@@ -1,5 +1,5 @@
 import { doInjectScript } from "@/pkg/utils/inject-help";
- 
+
 
 export default defineContentScript({
   matches: [
@@ -12,8 +12,8 @@ export default defineContentScript({
   runAt: "document_end",
   async main() {
     browser.runtime.onMessage.addListener(async (message) => {
-      if (message.action === "exportPdf") {
-        await doInjectScript();
+      if (message.action === "exportPdf" || message.action === "exportImage") {
+        await doInjectScript(message.action);
         return true;
       }
       return false;

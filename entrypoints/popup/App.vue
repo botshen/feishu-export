@@ -73,6 +73,25 @@ const handleExportFdf = async () => {
     console.error("发送消息到标签页失败:", error);
   }
 };
+const handleExportImage = async () => {
+  console.log("导出当前文档为图片");
+  try {
+    const [tab] = await browser.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    if (tab && tab.id) {
+      await browser.tabs.sendMessage(tab.id, {
+        action: "exportImage",
+      });
+      console.log("已发送导出当前文档图片消息到标签页");
+    } else {
+      console.error("无法获取当前标签页信息");
+    }
+  } catch (error) {
+    console.error("发送消息到标签页失败:", error);
+  }
+};
 </script>
 
 <template>
@@ -141,6 +160,12 @@ const handleExportFdf = async () => {
       >
         导出当前文档为PDF
       </button>
+      <!-- <button
+        @click="handleExportImage"
+        class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
+      >
+        导出当前文档为图片
+      </button> -->
     </div>
     <div class="mt-4 text-center text-xs text-gray-500">
       欢迎加入交流群QQ：741683982

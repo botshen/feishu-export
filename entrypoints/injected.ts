@@ -140,7 +140,7 @@ export default defineUnlistedScript(() => {
         margin: [15, 15, 15, 15],
         filename: `${recommendName}.pdf`,
         image: { type: 'jpeg', quality: 1 },
-        pagebreak: { 
+        pagebreak: {
           mode: 'avoid-all',
           avoid: ['*'] // 避免所有元素被分割
         },
@@ -155,4 +155,8 @@ export default defineUnlistedScript(() => {
       .from(tempDiv)
       .save();
   });
+
+  websiteMessenger.onMessage('exportImage', async (data) => {
+    Toast.warning({ content: 'exportImage' })
+  })
 });
