@@ -139,7 +139,7 @@ const handleExportFdf = async () => {
         @click="handleExportFdf"
         class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
       >
-        导出当前文档为Fdf
+        导出当前文档为PDF
       </button>
     </div>
     <div class="mt-4 text-center text-xs text-gray-500">
