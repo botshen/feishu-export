@@ -12,7 +12,7 @@ export default defineContentScript({
   runAt: "document_end",
   async main() {
     browser.runtime.onMessage.addListener(async (message) => {
-      if (message.action === "exportPdf" || message.action === "exportImage") {
+      if (message.action === "exportPdf" || message.action === "exportImage" || message.action === "handleExportPdfAll") {
         await doInjectScript(message.action);
         return true;
       }

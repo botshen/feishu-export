@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-const handleExportPdf = async () => {
+const handleExportPdfAll = async () => {
   console.log("批量导出PDF");
   try {
     const [tab] = await browser.tabs.query({
@@ -7,7 +7,7 @@ const handleExportPdf = async () => {
       currentWindow: true,
     });
     if (tab && tab.id) {
-      await browser.tabs.sendMessage(tab.id, { action: "triggerExportPdf" });
+      await browser.tabs.sendMessage(tab.id, { action: "handleExportPdfAll" });
       console.log("已发送导出PDF消息到标签页");
     } else {
       console.error("无法获取当前标签页信息");
@@ -100,8 +100,8 @@ const handleExportImage = async () => {
       超级强大的飞书导出神器
     </h1>
     <div class="flex flex-col gap-3">
-      <!-- <button
-        @click="handleExportPdf"
+     <button
+        @click="handleExportPdfAll"
         class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
       >
         <svg
@@ -118,7 +118,7 @@ const handleExportImage = async () => {
         </svg>
         批量导出PDF
       </button>
-      <button
+     <!--   <button
         @click="handleExportPdfCurrent"
         class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-lg shadow transition-colors flex items-center justify-center"
       >

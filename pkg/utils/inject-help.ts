@@ -1,6 +1,6 @@
 import { websiteMessenger } from "@/entrypoints/message/website-messaging";
 
-export async function doInjectScript(action: "exportPdf" | "exportImage"): Promise<void> {
+export async function doInjectScript(action: "exportPdf" | "exportImage" | "handleExportPdfAll"): Promise<void> {
   const url = browser.runtime.getURL("/injected.js");
   console.log('url', url)
   // 检查脚本是否已经注入
